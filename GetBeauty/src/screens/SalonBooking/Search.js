@@ -46,10 +46,10 @@ const Search = ({ navigation }) => {
                     <Heading text={"Search"} />
                     <View style={styles.view}>
                         <View>
-                            <TextInput placeholder='Search Parlour' style={{ fontSize: Font.body, paddingLeft:moderateScale(15), color: Colors.black }} onChangeText={(val) => { setparlourName(val) }} />
+                            <TextInput placeholder='Search Parlour' style={{ fontSize: Font.body, paddingLeft: moderateScale(15), color: Colors.black }} onChangeText={(val) => { setparlourName(val) }} />
                         </View>
-                        <View style={{ paddingRight:moderateScale(5) }}>
-                            <BtnComp btnText={<FontAwesome name="search" color={Colors.white} size={20} />} btnStyle={{ padding:moderateScale(7) }} onPress={handleform} />
+                        <View style={{ paddingRight: moderateScale(5) }}>
+                            <BtnComp btnText={<FontAwesome name="search" color={Colors.white} size={20} />} btnStyle={{ padding: moderateScale(7) }} onPress={handleform} />
                         </View>
                     </View>
                     {result && <View>
@@ -60,15 +60,15 @@ const Search = ({ navigation }) => {
                             renderItem={({ item }) => (
                                 <View style={{ flex: 1, }}>
                                     <TouchableOpacity onPress={() => navigation.navigate('SeeProfile', { item })}>
-                                        <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginTop:moderateScale(10), marginBottom:moderateScale(10) }}>
+                                        <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginTop: moderateScale(10), marginBottom: moderateScale(10) }}>
                                             <View>
                                                 <Image source={{ uri: item.pic }}
-                                                    style={{ borderRadius:moderateScale(40), width:moderateScale(40), height:moderateScale(40) }}
+                                                    style={styles.img}
                                                 />
                                             </View>
                                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
                                                 <View style={{ marginLeft: 10, width: "69%" }}>
-                                                    <Text style={{ color: Colors.black, fontSize: Font.list }}>{item.parlourName}</Text>
+                                                    <Text style={{ color: Colors.black, fontSize: Font.list, fontWeight:'500' }}>{item.parlourName}</Text>
                                                     <Text>{item.name}</Text>
                                                 </View>
                                             </View>
@@ -103,8 +103,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         backgroundColor: Colors.white,
         borderRadius: moderateScale(12),
-     marginTop:moderateScale(10),
-     elevation:10
+        marginTop: moderateScale(10),
+        elevation: 10
+    },
+    img: {
+        borderRadius: moderateScale(40),
+        width: moderateScale(50),
+        height: moderateScale(50)
     }
 });
 

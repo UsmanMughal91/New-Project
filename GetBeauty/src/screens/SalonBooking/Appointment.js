@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     flatView: {
         flexDirection: 'row',
         flex: 1,
-        marginTop: moderateScale(20),
+        marginTop: moderateScale(30),
         justifyContent: 'space-between'
     },
     barView: {
@@ -124,9 +124,10 @@ const styles = StyleSheet.create({
         borderRadius: moderateScale(40)
     },
     flatlist: {
-        fontSize: Font.body,
+        fontSize: Font.list,
         color: Colors.black,
-        marginLeft: moderateScale(10)
+        marginLeft: moderateScale(10),
+        fontWeight:'500'
     },
     status: {
         backgroundColor: "#ccc",

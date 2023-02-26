@@ -1,201 +1,68 @@
+
 //import liraries
-import React, { Component, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, FlatList, Button, TextInput } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import DropDown from '../../Components/DropDown';
-import Heading from '../../Components/Heading';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import InputText from '../../Components/InputText';
-import SubHeading from "../../Components/SubHeading"
+import React from 'react';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import BtnComp from '../../Components/BtnComp';
-import AntDesign from 'react-native-vector-icons/AntDesign'
-let fruits = [
-    { id: 1, name: 'mango' },
-    { id: 2, name: 'apple' },
-    { id: 3, name: 'orange' },
-    { id: 3, name: 'orange' },
-    { id: 3, name: 'orange' },
-    { id: 3, name: 'orange' },
-    { id: 3, name: 'orange' },
-    { id: 3, name: 'orange' },
-
-
-
-]
+import Header from '../../Components/Header';
+import SubHeading from '../../Components/SubHeading';
+import { scale, verticalScale, moderateScale, moderateVerticalScale } from 'react-native-size-matters';
+import Font from '../../Styles/Font';
+import { toastConfig } from '../../Styles/styles';
+import Toast from 'react-native-toast-message';
 // create a component
-const ServicesG = ({ navigation }) => {
+const ServicesG = ({ navigation, route }) => {
+    const profile = route.params.item
 
-    const [datePicker, setDatePicker] = useState(false);
-    const [date, setDate] = useState(new Date());
+    const id = profile._id
 
-    const [timePicker, setTimePicker] = useState(false);
-    const [time, setTime] = useState(new Date(Date.now()));
-    const [show, setshow] = useState(false)
-    const [show1, setshow1] = useState(false)
-    function showDatePicker() {
-        setDatePicker(true);
-    };
-
-    function showTimePicker() {
-        setTimePicker(true);
-    };
-
-    function onDateSelected(event, value) {
-        setDate(value);
-        setDatePicker(false);
-    };
-
-    function onTimeSelected(event, value) {
-        setTime(value);
-        setTimePicker(false);
-    };
-
-
-
-
-
-
-
-
-
-
-
-
-
-    const [selectedItem, setselectedItem] = useState(null)
-    const onSelect = (item) => {
-        setselectedItem(item)
+    const onclick=()=>{
+        Toast.show({
+            type: 'warning',
+            position: 'top',
+            topOffset: 0,
+            text1:"Please Register for full access",
+        })
     }
-    const Data = [
-        {
-            id: 1,
-            service: 'Hair Cut',
-            pic: require('../../assests/images/b.jpg'),
-            Pr: '500 pkr'
-        },
-        {
 
-            id: 2,
-            service: 'Urgent faical',
-            pic: require('../../assests/images/b.jpg'),
-            Pr: '700 pkr'
-        },
-        {
-
-            id: 3,
-            service: 'Party makeup',
-            pic: require('../../assests/images/b.jpg'),
-            Pr: '800 pkr'
-        },
-        {
-
-            id: 4,
-            service: 'Bridel',
-            pic: require('../../assests/images/b.jpg'),
-            Pr: '4500 pkr'
-        },
-        {
-
-            id: 5,
-            service: 'Hair color',
-            pic: require('../../assests/images/b.jpg'),
-            Pr: '1000 pkr'
-        }
-    ]
-
-
-
-    const onBtn = () => {
-
-        <View>
-            <InputText placeholder={"Monday to thursday"} />
-            <InputText placeholder={"08:00 am to 10:00 pm"} />
-        </View>
-
-    }
     return (
-        <View style={styles.container}>
-            <View style={{ flex: 1 }}>
-                <View style={{ width: 40 }}>
-                    <Ionicons name='md-chevron-back-circle-outline' size={40} color={'black'} onPress={() => navigation.goBack()} />
-                </View>
-              
-                <SubHeading text={"Time schedule"} />
-                   
-                  
-            
-                <View>
-                    <InputText placeholder={"Monday to thursday"} />
-                    <InputText placeholder={"08:00 am to 10:00 pm"}
-                         />
-                </View>
+        <View style={{ flex: 1 }}>
+            <Header onPress={() => navigation.goBack()} />
+            <ScrollView>
+                {profile &&
+                    <View style={styles.container}>
+                        <View style={{ alignItems: 'center', marginTop: moderateScale(10) }}>
+                            <Image source={{ uri: profile.pic }}
+                                style={styles.img} />
+                            <SubHeading text={profile.parlourName} />
+                            <Text style={{ fontSize: Font.text, marginBottom: moderateScale(10) }}>{profile.name}</Text>
+                            <BtnComp btnText={"Services"} onPress={onclick} />
 
-                
-                <View style={{backgroundColor:'white',marginTop:20,alignSelf:'center',borderRadius:12}}>
-                    <AntDesign name={show === false ? 'plus' : "minus"} size={30}  onPress={() => setshow(!show)} />
-                </View>
+                        </View>
+                        <SubHeading text={"About"} />
+                        <Text style={styles.text}>{profile.about ? profile.about : "No more details"}</Text>
+                        <SubHeading text={"Opening Hours"} />
+                        {profile.daysX ? <View style={{ flexDirection: "row", justifyContent: 'space-between' }}>
+                            <Text style={styles.text}>{profile.daysX}</Text>
+                            <Text style={styles.text}>{profile.timeX}</Text>
+                        </View> : <Text>No time schedule found</Text>}
+                        {profile.daysY ? <View style={{ flexDirection: "row", justifyContent: 'space-between' }}>
+                            <Text style={styles.text}>{profile.daysY}</Text>
+                            <Text style={styles.text}>{profile.timeY}</Text>
+                        </View> : null}
+                        {profile.daysZ ? <View style={{ flexDirection: "row", justifyContent: 'space-between' }}>
+                            <Text style={styles.text}>{profile.daysZ}</Text>
+                            <Text style={styles.text}>{profile.timeZ}</Text>
+                        </View> : null}
 
+                        <SubHeading text={"Address"} />
+                        <Text style={styles.text}>{profile.address}</Text>
+                        <SubHeading text={"Contact"} />
+                        <Text style={styles.text}>{profile.phone}</Text>
+                        <Text style={styles.text}>{profile.email}</Text>
 
-                {show && <View>
-                    <InputText placeholder={"Monday to thursday"} />
-                    <InputText placeholder={"08:00 am to 10:00 pm"}/>
+                    </View>}
 
-
-                    <View style={{ backgroundColor: 'white', marginTop: 20, alignSelf: 'center', borderRadius: 12 }}>
-                        <AntDesign name={show1 === false ? 'plus' : "minus"} size={30} onPress={() => setshow1(!show1)} />
-                    </View>
-
-                </View>}
-               
-                {show1 && <View>
-                    <InputText placeholder={"Monday to thursday"} />
-                    <InputText placeholder={"08:00 am to 10:00 pm"}
-                       
-                    />
-                </View>}
-
-
-
-                <Heading text={"Services"} />
-
-
-
-
-
-
-
-
-                <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 10 }}>
-                    <Text style={{ fontSize: 16, marginBottom: 10, color: 'red' }}>Please Register to get full access</Text>
-                    <TouchableOpacity onPress={() => navigation.navigate("registerOption")}>
-                        <Text style={{ fontSize: 16, marginBottom: 10, color: 'orange' }}> Click Here</Text>
-                    </TouchableOpacity>
-                </View>
-                <FlatList
-                    data={Data}
-                    keyExtractor={Data => Data.id.toString()}
-                    renderItem={({ item }) => (
-                        <View style={{ flex: 1 }}>
-                            <View style={{ flexDirection: 'row', marginBottom: 20, justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'white', borderRadius: 12, height: 80 }}>
-                                <View>
-                                    <Image source={item.pic} style={{ width: 50, height: 50, borderRadius: 50, marginLeft: 5 }} />
-                                </View>
-                                <View style={{ width: 230 }}>
-                                    <Text style={{ fontSize: 18 }}>{item.service}</Text>
-                                </View>
-                                <View>
-                                    <Text style={{ fontWeight: "bold", fontSize: 15, marginRight: 10 }}>{item.Pr}</Text>
-                                </View>
-                            </View>
-
-
-                        </View>)} />
-            </View>
-
-
-
-
-
+            </ScrollView>
         </View>
     );
 };
@@ -203,27 +70,19 @@ const ServicesG = ({ navigation }) => {
 // define your styles
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        margin: 20
+        margin: moderateScale(20)
     },
-    btn: {
-        marginTop: 20,
+    img: {
+        width: moderateScale(100),
+        height: moderateScale(100),
+        borderRadius: moderateScale(50),
+        marginTop: moderateScale(10)
     },
-    MainContainer: {
-        flex: 1,
-        padding: 6,
-        alignItems: 'center',
-        backgroundColor: 'white'
-    },
-
     text: {
-        fontSize: 25,
-        color: 'red',
-        padding: 3,
-        marginBottom: 10,
-        textAlign: 'center'
-    },
-
+        fontSize: Font.text,
+        marginTop: moderateScale(10),
+        textAlign: 'justify'
+    }
 });
 
 //make this component available to the app

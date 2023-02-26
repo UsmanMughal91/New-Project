@@ -1,264 +1,131 @@
-
-// //import liraries
-// import React, { Component } from 'react';
-// import { View, Text, StyleSheet,FlatList,TouchableOpacity,Image } from 'react-native';
-
-// // create a component
-// class ParlourListG extends Component {
-//     state={
-//         data:[
-//             {
-//                 id: 1,
-//                 PName: "New Beauty Parlour",
-//                 name: 'Ayesha',
-//                 images: require('../../assests/images/a.jpg'),
-//             },
-//             {
-//                 id: 2,
-//                 PName: "Shine Beauty Salon",
-//                 name: 'Zoya',
-//                 images: require('../../assests/images/b.jpg'),
-//             },
-//             {
-//                 id: 3,
-//                 PName: "Star Salon",
-//                 name: 'Sana',
-//                 images: require('../../assests/images/c.jpg'),
-//             },
-//             {
-//                 id: 4,
-//                 PName: "Child Beauty Parlour",
-//                 name: 'Mehak ',
-//                 images: require('../../assests/images/d.jpg'),
-//             },
-//             {
-//                 id: 5,
-//                 PName: "New Beauty Parlour",
-//                 name: 'Ayesha',
-//                 images: require('../../assests/images/a.jpg'),
-//             },
-//             {
-//                 id: 6,
-//                 PName: "Shine Beauty Salon",
-//                 name: 'Zoya',
-//                 images: require('../../assests/images/b.jpg'),
-//             },
-//             {
-//                 id: 7,
-//                 PName: "Star Salon",
-//                 name: 'Sana',
-//                 images: require('../../assests/images/c.jpg'),
-//             },
-//             {
-//                 id: 8,
-//                 PName: "Child Beauty Parlour",
-//                 name: 'Mehak ',
-//                 images: require('../../assests/images/d.jpg'),
-//             }
-//         ]
-//     }
-//     onDelete = (id)=>{
-//         const { data } = this.state
-//         const filterArray=data.filter((item,i)=>{
-// if(item.id !== id ){
-//    return item
-// }
-//         })
-//         console.log(filterArray)
-//         this.setState({data:filterArray})
-
-//     }
-//     renderItem = ({item}) =>{
-// return(
-//     <View style={{ flex: 1, }}>
-//         <TouchableOpacity onPress={() => navigation.navigate('ServicesG')}>
-//             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginBottom: 15 }}>
-//                 <View>
-//                     <Image source={item.images}
-//                         style={{ borderRadius: 40, width: 50, height: 50 }}
-//                     />
-//                 </View>
-
-//                 <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-//                     <View style={{ marginLeft: 10, width: "69%" }}>
-//                         <Text style={{ color: 'black', fontSize: 20 }}>{item.PName}</Text>
-//                         <Text>{item.name}</Text>
-//                     </View>
-
-//                 </View>
-
-//                 <View>
-//                     <TouchableOpacity onPress={()=>this.onDelete(item.id)}
-//                      style={{backgroundColor:'lightpink',padding:5,borderRadius:20}}>
-//                         <Text >Delete</Text>
-//                     </TouchableOpacity>
-
-//                 </View>
-//             </View>
-//         </TouchableOpacity>
-//     </View>
-// )
-//     }
-
-
-
-
-//     render() {
-//         const {data} = this.state
-//         return (
-//             <View style={styles.container}>
-//                 <FlatList 
-//                 data={data}
-//                 renderItem={this.renderItem}
-//                 keyExtractor={(item)=>item.id}
-//                 />
-//             </View>
-//         );
-//     }
-// }
-
-// // define your styles
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//         margin:20
-//     },
-// });
-
-// //make this component available to the app
-// export default ParlourListG;
-
-
 //import liraries
-import React, { Component, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
-
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, ScrollView, ImageBackground, TextInput } from 'react-native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import Heading from '../../Components/Heading';
+import Colors from '../../Styles/Colors';
+import Font from '../../Styles/Font';
+import BaseUrl from '../../baseUrl/BaseUrl';
+import Loader from '../../Components/Loader';
+import { getToken } from '../../../services/AsyncStorage';
+import { scale, verticalScale, moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 // create a component
-const ParlourListG = () => {
-//   const [state,setState] = useState({data:[]})
-    const [state, setState] = useState({
-        data: [{
-            id: 1,
-            PName: "New Beauty Parlour",
-            name: 'Ayesha',
-            images: require('../../assests/images/a.jpg'),
-        },
-            {
-                id: 2,
-                PName: "Shine Beauty Salon",
-                name: 'Zoya',
-                images: require('../../assests/images/b.jpg'),
-            },
-            {
-                id: 3,
-                PName: "Star Salon",
-                name: 'Sana',
-                images: require('../../assests/images/c.jpg'),
-            },
-            {
-                id: 4,
-                PName: "Child Beauty Parlour",
-                name: 'Mehak ',
-                images: require('../../assests/images/d.jpg'),
-            },] });
-
-    let onDelete = (id) => {
-        const { data } = state
-        const newArray = data.filter((item, i) => {
-            if (item.id !== id) {
-                return item
-            }
-        })
-        console.log(newArray)
-        setState({ data: newArray })
-
+const ParlorList = ({ navigation }) => {
+    const [data, setdata] = useState()
+    const [loading, setloading] = useState(true)
+    const getlist = async () => {
+        try {
+            await fetch(`${BaseUrl.ExpertBaseurl}/getlist`)
+                .then(res => res.json())
+                .then(d => { setdata(d.data), setloading(false) })
+                .catch(err => console.log(err))
+        } catch (error) {
+            console.log(error)
+        }
     }
+    useEffect(() => {
+        getlist()
+        console.log(data)
+    }, [])
 
-    // state = {
-    //     data: [
-    //         {
-    //             id: 1,
-    //             PName: "New Beauty Parlour",
-    //             name: 'Ayesha',
-    //             images: require('../../assests/images/a.jpg'),
-    //         },
-    //         {
-    //             id: 2,
-    //             PName: "Shine Beauty Salon",
-    //             name: 'Zoya',
-    //             images: require('../../assests/images/b.jpg'),
-    //         },
-    //         {
-    //             id: 3,
-    //             PName: "Star Salon",
-    //             name: 'Sana',
-    //             images: require('../../assests/images/c.jpg'),
-    //         },
-    //         {
-    //             id: 4,
-    //             PName: "Child Beauty Parlour",
-    //             name: 'Mehak ',
-    //             images: require('../../assests/images/d.jpg'),
-    //         },
-    //     ]
-    // }
-
-    renderItem = ({ item }) => {
-       
-        return (
-            <View style={{ flex: 1, }}>
-                <TouchableOpacity onPress={() => navigation.navigate('ServicesG')}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginBottom: 15 }}>
+    return (
+        
+        <View style={styles.container}>
+            {loading ? (<Loader/>) : (
+                <View> 
+                <ImageBackground source={require('../../assests/images/beauty.jpg')}
+                style={{ width: "100%", height: moderateScale(220) }}>
+                <View style={styles.picView}>
+                    <View style={styles.nav}>
+                        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                            <FontAwesome name='navicon' size={20} color={Colors.black} />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.viewblack}>
+                        <Text style={{ fontSize: scale(27), color: Colors.white, fontWeight: 'bold', marginLeft: moderateScale(5) }}>Beauty Parlour</Text>
+                        <Text style={{ fontSize: scale(12), color: Colors.white, marginBottom: moderateScale(10), marginLeft: moderateScale(5) }}>Beauty Parlour Booking App</Text>
                         <View>
-                            <Image source={item.images}
-                                style={{ borderRadius: 40, width: 50, height: 50 }}
-                            />
-                        </View>
-
-                        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <View style={{ marginLeft: 10, width: "69%" }}>
-                                <Text style={{ color: 'black', fontSize: 20 }}>{item.PName}</Text>
-                                <Text>{item.name}</Text>
-                            </View>
-
-                        </View>
-
-                        <View>
-                            <TouchableOpacity>
-                                <Text style={{ fontSize: 20 }} onPress={() => onDelete(item.id)}>
-                                    Delete
-                                </Text>
-                            </TouchableOpacity>
                         </View>
                     </View>
-                </TouchableOpacity>
-            </View>
+                </View>
+            </ImageBackground>
 
-        )
-    }
-
-  
-const {data} = state
-    return (
-
-        <View style={styles.container}>
-            <FlatList
-                data={data}
-                keyExtractor={(item) => item.id}
-                renderItem={renderItem}
-
-            />
+            <ScrollView nestedScrollEnabled>
+                <Heading text={"Choose Parlour"} viewStyle={{ alignItems: 'center' }} />
+                <View style={{ margin: moderateScale(10) }}>
+                   
+                    {data && <FlatList
+                        data={data}
+                        keyExtractor={data => data._id}
+                        renderItem={({ item }) => (
+                            <View >
+                                <View >
+                                    <View style={styles.flatlistview}>
+                                        <TouchableOpacity >
+                                            <Image source={{ uri: item.pic }}
+                                                style={styles.img}
+                                            />
+                                        </TouchableOpacity>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                            <TouchableOpacity onPress={() => navigation.navigate('ServicesG', { item })}
+                                                style={{ marginLeft: moderateScale(10), width: "80%" }}>
+                                                <Text style={{ color: Colors.black, fontSize: Font.list,fontWeight:'600'}}>{item.parlourName}</Text>
+                                                <Text style={{ fontSize: Font.text }}>{item.name}</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                        <View>
+                                        </View>
+                                    </View>
+                                </View>
+                            </View>
+                        )} />}
+                </View>
+            </ScrollView>
+                </View>
+            ) }
+            
         </View>
     );
-};
+}
 
 // define your styles
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        margin: 20,
     },
+    nav: {
+        backgroundColor: Colors.white,
+        alignSelf: 'flex-start',
+        marginTop: moderateScale(20),
+        marginLeft: moderateScale(10),
+        borderRadius: moderateScale(12),
+        padding: moderateScale(5)
+    },
+    picView: {
+        height: moderateVerticalScale(210),
+        borderColor: 'white',
+        justifyContent: 'space-between'
+    },
+    viewblack: {
+        marginLeft: moderateScale(10),
+        width: "60%",
+        borderRadius: moderateScale(12),
+        backgroundColor: Colors.black,
+        opacity: 0.8,
+        marginBottom: moderateScale(10),
+        justifyContent: "center"
+    },
+    flatlistview: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        margin: moderateScale(10)
+    },
+    img: {
+        borderRadius: moderateScale(40),
+        width: moderateScale(50),
+        height: moderateScale(50)
+    }
 });
 
 //make this component available to the app
-export default ParlourListG;
+export default ParlorList;

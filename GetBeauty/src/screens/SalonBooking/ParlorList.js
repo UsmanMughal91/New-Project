@@ -49,7 +49,7 @@ const ParlorList = ({ navigation }) => {
             </ImageBackground>
 
             <ScrollView nestedScrollEnabled>
-                <SubHeading text={"Choose Parlour"} viewStyle={{ alignItems:'center'}} />
+                <SubHeading text={"Select Parlours"} viewStyle={{marginLeft:moderateScale(20)}} textStyle={{fontWeight:'bold'}}/>
                 <View style={{margin:moderateScale(10)}}>
                     {loading && <Loader />}
                     {data && <FlatList
@@ -67,7 +67,7 @@ const ParlorList = ({ navigation }) => {
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                             <TouchableOpacity onPress={() => navigation.navigate('SeeProfile', { item })}
                                              style={{ marginLeft:moderateScale(10), width: "80%" }}>
-                                                <Text style={{ color:Colors.black, fontSize:Font.body }}>{item.parlourName}</Text>
+                                                <Text style={{ color:Colors.black, fontSize:Font.list,fontWeight:'500' }}>{item.parlourName}</Text>
                                                 <Text style={{fontSize:Font.text}}>{item.name}</Text>
                                             </TouchableOpacity>
                                         </View>
@@ -117,8 +117,8 @@ const styles = StyleSheet.create({
     },
     img: {
         borderRadius: moderateScale(40),
-        width: moderateScale(40),
-        height: moderateScale(40)
+        width: moderateScale(50),
+        height: moderateScale(50)
     }
 });
 

@@ -40,7 +40,8 @@ const styles = StyleSheet.create({
         marginTop:moderateScale(20),
         backgroundColor: Colors.white,
         borderRadius:moderateScale(12),
-        padding:moderateScale(5)
+        padding:moderateScale(5),
+        elevation:10
     },
     text:{
         fontSize: Font.subHeading,
