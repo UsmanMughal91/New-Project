@@ -55,62 +55,64 @@ const ProviderServices = ({ navigation }) => {
     }, [])
     return (
         <View style={{ flex: 1 }}>
+{loading ? (<Loader/>):(<View style={{flex:1}}>
+                <Header onPress={() => navigation.goBack()} />
+                <ScrollView>
 
-            <Header onPress={() => navigation.goBack()} />
-            <ScrollView>
-                {loading && <Loader viewStyle={{ marginTop: 330 }} />}
-                {data &&
-                    <View style={{margin:moderateScale(10)}}>
-                        <View >
-                            <Heading text={"Services"} />
-                            <View style={styles.sView}>
-                                <View>
-                                    <TextInput placeholder='Search Service'
-                                        style={{ fontSize: Font.body }}
-                                        onChangeText={(val) => { setSearch(val) }} />
-                                </View>
-                                <View>
-                                    <TouchableOpacity style={styles.searchb}>
-                                        <Text style={{ color: Colors.white, fontSize: Font.text }}>Search</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                            <FlatList
-                                data={data.filter((item) => { if (item.serviceName.includes(search)) { return item } })}
-                                keyExtractor={data => data._id.toString()}
-                                ListEmptyComponent={() => {
-                                    return (
-                                        <View>
-                                            <Text style={{ color: Colors.purple }}>No data found</Text>
-                                        </View>
-                                    );
-                                }}
-                                renderItem={({ item }) => (
-
-                                    <View style={styles.flatView}>
-                                        
-                                        <View style={{ flexDirection: 'row', alignItems: "center" }}>
-                                            <View>
-                                                <Image source={{ uri: item.pic }} style={styles.img} />
-                                            </View>
-                                            <View style={{ marginLeft:moderateScale(10) }}>
-                                                <TouchableOpacity onPress={() => navigation.navigate('ServiceDetail', { item })}>
-                                                    <Text style={{ fontSize: 18, color: 'black' }}>{item.serviceName}</Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        </View>
-                                        <View style={{ paddingRight: moderateScale(10) }}>
-                                            <Ionicons name='chevron-forward' size={20}
-                                                onPress={() => navigation.navigate('ServiceDetail', { item })} />
-                                        </View>
+                    {data &&
+                        <View style={{ margin: moderateScale(10) }}>
+                            <View >
+                                <Heading text={"Services"} />
+                                <View style={styles.sView}>
+                                    <View>
+                                        <TextInput placeholder='Search Service'
+                                            style={{ fontSize: Font.body }}
+                                            onChangeText={(val) => { setSearch(val) }} />
                                     </View>
+                                    <View>
+                                        <TouchableOpacity style={styles.searchb}>
+                                            <Text style={{ color: Colors.white, fontSize: Font.text }}>Search</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                                <FlatList
+                                    data={data.filter((item) => { if (item.serviceName.includes(search)) { return item } })}
+                                    keyExtractor={data => data._id.toString()}
+                                    ListEmptyComponent={() => {
+                                        return (
+                                            <View>
+                                                <Text style={{ color: Colors.purple }}>No data found</Text>
+                                            </View>
+                                        );
+                                    }}
+                                    renderItem={({ item }) => (
 
-                                )}
-                            />
+                                        <View style={styles.flatView}>
+
+                                            <View style={{ flexDirection: 'row', alignItems: "center" }}>
+                                                <View>
+                                                    <Image source={{ uri: item.pic }} style={styles.img} />
+                                                </View>
+                                                <View style={{ marginLeft: moderateScale(10) }}>
+                                                    <TouchableOpacity onPress={() => navigation.navigate('ServiceDetail', { item })}>
+                                                        <Text style={{ fontSize: 18, color: 'black' }}>{item.serviceName}</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            </View>
+                                            <View style={{ paddingRight: moderateScale(10) }}>
+                                                <Ionicons name='chevron-forward' size={20}
+                                                    onPress={() => navigation.navigate('ServiceDetail', { item })} />
+                                            </View>
+                                        </View>
+
+                                    )}
+                                />
+                            </View>
                         </View>
-                    </View>
-                }
-            </ScrollView>
+                    }
+                </ScrollView>
+</View>)}
+            
 
         </View>
     );

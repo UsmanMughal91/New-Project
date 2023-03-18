@@ -16,7 +16,7 @@ import { moderateScale, moderateVerticalScale } from 'react-native-size-matters'
 // create a component
 const Login = ({ navigation }) => {
     const [email, setemail] = useState("Sajid@gmail.com")
-    const [password, setpassword] = useState("123")
+    const [password, setpassword] = useState("123456")
     const [data, setdata] = useState("")
     const [show, setshow] = useState(false)
     const [visible, setvisible] = useState(false)
@@ -26,7 +26,7 @@ const Login = ({ navigation }) => {
     }
     const handleform = async () => {
         if (email && password) {
-            if (password.length > 2) {
+            if (password.length > 5) {
                 try {
                     const option = {
                         method: 'POST',

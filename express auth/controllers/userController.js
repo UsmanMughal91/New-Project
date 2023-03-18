@@ -8,7 +8,7 @@ import ExpertModel from '../models/Expert.js'
 import Stripe from "stripe"
 
 const stripe = Stripe('sk_test_51MMrrHAhoA10sFoFiGEIJWI3cU6jMpPMSGWyn8cY6xNecwKmGH48OVtq5c7eo3kp7nt8qPXCuNlHKcHZKC7zY1Cw00wmK077Hp')
-
+import FCM from "fcm-node";
 
 class userController {
     static userRegistration = async (req, res) => {
@@ -98,30 +98,33 @@ class userController {
 
     static sendUserPasswordResetEmail = async (req, res) => {
         const { email } = req.body
-        console.log(req.body)
         if (email) {
             const user = await UserModel.findOne({ email: email })
             if (user) {
+                const otp = Math.floor(1000 + Math.random() * 9000)
+                user.otp = otp;
+                await user.save();
                 const secret = user._id + process.env.JWT_SECRET_KEY
                 const token = jwt.sign({ userID: user._id }, secret, { expiresIn: '15m' })
-                const link = `http://192.168.245.7:8000/api/user/reset/${user._id}/${token}`
-                console.log(link)
                 // Send Email
-                let info = await transporter.sendMail({
-                  from: process.env.EMAIL_FROM,
-                  to: user.email,
-                  subject: "GetBeauty - Password Reset Link",
-                  html: `<a href=${link}>Click Here</a> to Reset Your Password`
+                await transporter.sendMail({
+                    from: 'noreply@mail.com',
+                    to: user.email,
+                    subject: "GetBeauty - Password Reset Otp",
+                    html: `
+                  <p>You requested for password reset</p>
+                  <h5>your OTP to reset password is <br><h1>${otp}</h1></h5>
+                  `,
                 })
-                res.send({ "status": "success", "message": "Password Reset Email Sent... Please Check Your Email" })
+                res.send({ "status": "success", "message": "Password Reset Email Sent... Please Check Your Email", otp: otp, token: token })
             } else {
                 res.send({ "status": "failed", "message": "Email doesn't exists" })
             }
         } else {
             res.send({ "status": "failed", "message": "Email Field is Required" })
         }
-    }
 
+    }
     static userPasswordReset = async (req, res) => {
         const { password, password_confirmation } = req.body
         const { id, token } = req.params
@@ -184,11 +187,37 @@ class userController {
                 status:data.status,
             })
             await doc.save()
+            const serverKey = 'AAAASkp9QyE:APA91bGyROYtC6ki4jnefh5xN9I_7pNOxfQYYEbyr9KTqLSaiaQWlMUU71Q-LxA8i6dmABq39q_dOTjkLctGauFo-0_ZVwiCn2eXKom578213Sq5E5QFpdILdoHcqFHycXNl6MbUtpTQ';
+            const fcm = new FCM(serverKey);
+            // var UsereModel = require('../models/user.model');
+            // NOTIFICATION FUNCTION 
+            const pushNotification = async (notificationTitle, notificationMsg, deviceToken, count = 0) => {
+                //   let action_user = await UsereModel.findOne({_id: action_id});
+                var message = {
+                    to: deviceToken,
+                    collapse_key: 'AAAANUMQE8c:APA91bFBZXcoBtA5GMrpj3zxkP-UEtqY50RBW2Fa8XOAJJjeUOS4g1LWj2JuK5qiwy7Nkd81wstEl934KoUoZiLEOrGFv_dvtmvrOa-Um2Dd9OrNuJunFaoyuVoGkEd3g9efx8ytdCjt',
+                    notification: {
+                        title: notificationTitle,
+                        body: notificationMsg
+                    },
+                    data: {
+                        count: count,
+                    }
+                };
+                fcm.send(message, function (err, response) {
+                    if (err) {
+                        console.log(err);
+                        console.log("Something has gone wrong!");
+                    } else {
+                        console.log("Successfully sent with response: ", response);
+                    }
+                });
+            };
             res.send({ "status": "success", message: "data saved successfully" })
         } catch (error) {
-            res.send({ "status": "failed", message: "failed to save data" })
-            
+            res.send({ "status": "failed", message: "failed to save data" })     
         }
+      
         
 
     }

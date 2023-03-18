@@ -9,6 +9,8 @@ import { scale, verticalScale, moderateScale, moderateVerticalScale } from 'reac
 import Font from '../../Styles/Font';
 import { toastConfig } from '../../Styles/styles';
 import Toast from 'react-native-toast-message';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+
 // create a component
 const ServicesG = ({ navigation, route }) => {
     const profile = route.params.item
@@ -23,6 +25,8 @@ const ServicesG = ({ navigation, route }) => {
             text1:"Please Register for full access",
         })
     }
+   
+   
 
     return (
         <View style={{ flex: 1 }}>
@@ -61,7 +65,25 @@ const ServicesG = ({ navigation, route }) => {
                         <Text style={styles.text}>{profile.email}</Text>
 
                     </View>}
+                <View style={styles.mapcontainer}>
+              
+                    <MapView
+                        provider={PROVIDER_GOOGLE}
+                        style={styles.map}
+                        initialRegion={{
+                            latitude: 37.78825,
+                            longitude: -122.4324,
+                            latitudeDelta: 0.015,
+                            longitudeDelta: 0.0121,
+                        }}
+                        showUserLocation={true} >
+                        <Marker coordinate={{
+                            latitude: 37.78825,
+                            longitude: -122.4324,
+                        }} />
+                    </MapView>
 
+                </View>
             </ScrollView>
         </View>
     );
@@ -82,7 +104,17 @@ const styles = StyleSheet.create({
         fontSize: Font.text,
         marginTop: moderateScale(10),
         textAlign: 'justify'
-    }
+    },
+    mapcontainer: {
+    
+        height: 400,
+        width: 400,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+    },
+    map: {
+        ...StyleSheet.absoluteFillObject,
+    },
 });
 
 //make this component available to the app

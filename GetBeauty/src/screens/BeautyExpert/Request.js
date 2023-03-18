@@ -102,45 +102,48 @@ const Request = ({ navigation }) => {
         })();
     }, [refresh])
     return (
-        <View style={{ flex: 1 }}>
-            <Header text="no" onPress={() => navigation.goBack()} />
-            <View style={styles.container}>
-                <Heading text={"Customer Request"} />
-                {loading && <Loader />}
-                {data && <FlatList
-                    data={data.filter((item) => { if (item.status === "Requested") return item })}
-                    keyExtractor={data => data._id}
-                    renderItem={({ item }) => {
-                        return (
-                            <View style={{ flex: 1 }}>
-                                <View style={styles.View}>
-                                    <View style={{ width: moderateScale(60) }}>
-                                        <Image source={{ uri: item.user.pic }}
-                                            style={styles.img}
-                                        />
+        <View style={{flex:1}}>
+            {loading ? (<Loader/>):(<View>
+                <Header text="no" onPress={() => navigation.goBack()} />
+                <View style={styles.container}>
+                    <Heading text={"Customer Request"} />
+                    {data && <FlatList
+                        data={data.filter((item) => { if (item.status === "Requested") return item })}
+                        keyExtractor={data => data._id}
+                        renderItem={({ item }) => {
+                            return (
+                                <View>
+                                    <View style={styles.View}>
+                                        <View style={{ width: moderateScale(60) }}>
+                                            <Image source={{ uri: item.user.pic }}
+                                                style={styles.img}
+                                            />
+                                        </View>
+                                        <View style={{ flex: 1 }}>
+                                            <TouchableOpacity onPress={() => navigation.navigate('ServiceSummary', { item })}>
+                                                <Text style={{ color: Colors.black, fontSize: Font.body }}>{item.user.name}</Text>
+                                                <Text>{item.date}</Text>
+                                                <Text>{item.service.servicePrice} Rs</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                        <View style={styles.view2}>
+                                            <TouchableOpacity style={styles.click} onPress={() => accept(item)}>
+                                                <Text style={styles.text}>Accept</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity style={styles.click} onPress={() => cancle(item)}>
+                                                <Text style={styles.text} >Cancel</Text>
+                                            </TouchableOpacity>
+                                        </View>
                                     </View>
-                                    <View style={{ flex: 1 }}>
-                                        <TouchableOpacity onPress={() => navigation.navigate('ServiceSummary', { item })}>
-                                            <Text style={{ color: Colors.black, fontSize: Font.body }}>{item.user.name}</Text>
-                                            <Text>{item.date}</Text>
-                                            <Text>{item.service.servicePrice} Rs</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={styles.view2}>
-                                        <TouchableOpacity style={styles.click} onPress={() => accept(item)}>
-                                            <Text style={styles.text}>Accept</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.click} onPress={() => cancle(item)}>
-                                            <Text style={styles.text} >Cancel</Text>
-                                        </TouchableOpacity>
-                                    </View>
+
                                 </View>
 
-                            </View>
+                            )
+                        }} />}
+                </View>
 
-                        )
-                    }} />}
-            </View>
+            </View>)}
+           
         </View>
     );
 };

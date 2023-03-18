@@ -35,21 +35,21 @@ const ForgotPass = ({ navigation }) => {
                         }
                     )
                 }
-              
-                await fetch(`${BaseUrl.SalonBaseurl}/send-user-password-reset-email`,option)
+
+                await fetch(`${BaseUrl.SalonBaseurl}/send-user-password-reset-email`, option)
                     .then(res => res.json())
-                    .then(d =>{ setdata(d)
+                    .then(d => {
+                        setdata(d)
                         if (d.status === "success") {
                             // await storeToken(data.token)  // store token in storage 
                             // await clearTextInput()
-                           
                             Toast.show({
                                 type: 'Done',
                                 position: 'top',
                                 topOffset: 0,
-                                text1:d.message
+                                text1: d.message
                             })
-                            navigation.navigate("ResetPass")
+                            navigation.navigate("OTP", { d })
                         } else {
 
                             Toast.show({
@@ -64,7 +64,7 @@ const ForgotPass = ({ navigation }) => {
             } catch (error) {
                 console.log(error)
             }
-           
+
         } else {
             Toast.show({
                 type: 'warning',
@@ -80,14 +80,15 @@ const ForgotPass = ({ navigation }) => {
 
     return (
         <View >
-            <Header onPress={()=>navigation.goBack()} />
+            <Header onPress={() => navigation.goBack()} />
             <Toast config={toastConfig} />
             <View style={styles.container}>
-              
+
                 <Heading text={"Forgot Password"} />
                 <View style={{ marginTop: 30 }}>
-                    <InputText placeholder={"Enter Email"}
-                        onChangeText={setemail} />
+                    <InputText placeholder={"Email"}
+                    lable={'Enter Email'}
+                        onChangeText={(val) => { setemail(val) }} />
                     <View style={{ marginTop: 30 }}>
 
                         <BtnComp btnText={"Send Code"} onPress={handleform} />

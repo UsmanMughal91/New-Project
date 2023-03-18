@@ -10,7 +10,7 @@ import Loader from '../../Components/Loader';
 import { getToken } from '../../../services/AsyncStorage';
 import { scale, verticalScale, moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 // create a component
-const ParlorList = ({ navigation }) => {
+const ParlorListG = ({ navigation }) => {
     const [data, setdata] = useState()
     const [loading, setloading] = useState(true)
     const getlist = async () => {
@@ -29,7 +29,7 @@ const ParlorList = ({ navigation }) => {
     }, [])
 
     return (
-        
+
         <View style={styles.container}>
             {loading ? (<Loader/>) : (
                 <View> 
@@ -53,7 +53,7 @@ const ParlorList = ({ navigation }) => {
             <ScrollView nestedScrollEnabled>
                 <Heading text={"Choose Parlour"} viewStyle={{ alignItems: 'center' }} />
                 <View style={{ margin: moderateScale(10) }}>
-                   
+
                     {data && <FlatList
                         data={data}
                         keyExtractor={data => data._id}
@@ -77,13 +77,19 @@ const ParlorList = ({ navigation }) => {
                                         </View>
                                     </View>
                                 </View>
+
                             </View>
+
                         )} />}
+
                 </View>
+
             </ScrollView>
+
                 </View>
             ) }
-            
+
+
         </View>
     );
 }
@@ -128,4 +134,4 @@ const styles = StyleSheet.create({
 });
 
 //make this component available to the app
-export default ParlorList;
+export default ParlorListG;

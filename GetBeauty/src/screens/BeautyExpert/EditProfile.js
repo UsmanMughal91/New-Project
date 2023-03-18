@@ -167,142 +167,144 @@ const EditProfile = ({ navigation }) => {
     }, [])
     return (
         <View style={{ flex: 1 }}>
-    
-            <Header onPress={() => navigation.goBack()} />
-            <ScrollView>
-                {loading && <Loader viewStyle={{ marginTop: 320 }} />}
-                {data && <View style={{ flex: 1, margin: 20 }}>
+    {loading ? (<Loader/>): (<View style={{flex:1}}>
+                <Header onPress={() => navigation.goBack()} />
+                <ScrollView>
                    
-                    <Heading text={"Edit Profile"} />
+                    {data && <View style={{ flex: 1, margin: 20 }}>
 
-                    <View style={{ marginTop:moderateScale(10)}}>
-                        <InputText
-                        lable={"Name"}
-                         Icon={<Ionicons name="person" size={25} />}
-                            placeholder={"Enter Name"}
-                            value={name}
-                            onChangeText={(val) =>{ setname(val)}}
-                            Icons={<FontAwesome5 name="pencil-alt" size={20} />}
-                        />
+                        <Heading text={"Edit Profile"} />
 
-                        <InputText 
-                            lable={"Parlour Name"}
-                        Icon={<FontAwesome5 name="store" size={20} />}
-                            placeholder={"Parlour Name"}
-                            onChangeText={(val) => setparlourName(val)}
-                            keyboardType="email-address"
-                            value={parlourName}
-                            Icons={<FontAwesome5 name="pencil-alt" size={20} />}
-                        />
-
-                        <InputText
-                            lable={"Contact Number"} 
-                        Icon={<MaterialCommunityIcons name="phone" size={25} />}
-                            placeholder={"Phone"}
-                            onChangeText={(val) => setphone(val)}
-                            keyboardType="phone-pad"
-                            value={phone}
-                            Icons={<FontAwesome5 name="pencil-alt" size={20} />}
-                        />
-
-
-                        <InputText 
-                            lable={"Address"}
-                        Icon={<MaterialCommunityIcons name="home" size={25} />}
-                            placeholder={"Address"}
-                            onChangeText={(val) => setaddress(val)}
-                            value={address}
-                            Icons={<FontAwesome5 name="pencil-alt" size={20} />}
-                        />
-                        <InputText 
-                            lable={"About"}
-                        Icon={<MaterialCommunityIcons name="note" size={25} />}
-                            placeholder={"about"}
-                            onChangeText={(val) => setabout(val)}
-                             value={about}
-                            Icons={<FontAwesome5 name="pencil-alt" size={20} />}
-                            multiline={true}
-                            viewstyle={{ alignItems: 'flex-start', paddingTop: moderateScale(10) }}
-                            inputStyle={{ paddingTop: moderateScale(-10) }}
-                        />
-                        <SubHeading text={"Time schedule"} />
-                        <View>
-                            <InputText 
-                                lable={"Days"}
-                                placeholder={"Monday to thursday"}
-                                Icons={<FontAwesome5 name="pencil-alt" size={20} />} 
-                                onChangeText={(val)=>{setDaysX(val)}}
-                                value = {daysX}
-                                />
+                        <View style={{ marginTop: moderateScale(10) }}>
                             <InputText
-                                lable={"Timing"}
-                            placeholder={"08:00 am to 10:00 pm"}
+                                lable={"Name"}
+                                Icon={<Ionicons name="person" size={25} />}
+                                placeholder={"Enter Name"}
+                                value={name}
+                                onChangeText={(val) => { setname(val) }}
                                 Icons={<FontAwesome5 name="pencil-alt" size={20} />}
-                                onChangeText={(val)=>{setTimeX(val)}}
-                                value = {timeX}
                             />
-                        </View>
-                        <View style={{ backgroundColor: 'white', marginTop: 20, alignSelf: 'center', borderRadius: 12 }}>
-                            <AntDesign name={show === false ? 'plus' : "minus"} size={30} onPress={() => setshow(!show)} />
-                        </View>
-                        {show && <View>
+
                             <InputText
-                                lable={"Days"}
-                             placeholder={"Monday to thursday"}
-                                Icons={<FontAwesome5 name="pencil-alt" size={20} />} 
-                                onChangeText={(val)=>{setDaysY(val)}}
-                                value = {daysY}
+                                lable={"Parlour Name"}
+                                Icon={<FontAwesome5 name="store" size={20} />}
+                                placeholder={"Parlour Name"}
+                                onChangeText={(val) => setparlourName(val)}
+                                keyboardType="email-address"
+                                value={parlourName}
+                                Icons={<FontAwesome5 name="pencil-alt" size={20} />}
+                            />
+
+                            <InputText
+                                lable={"Contact Number"}
+                                Icon={<MaterialCommunityIcons name="phone" size={25} />}
+                                placeholder={"Phone"}
+                                onChangeText={(val) => setphone(val)}
+                                keyboardType="phone-pad"
+                                value={phone}
+                                Icons={<FontAwesome5 name="pencil-alt" size={20} />}
+                            />
+
+
+                            <InputText
+                                lable={"Address"}
+                                Icon={<MaterialCommunityIcons name="home" size={25} />}
+                                placeholder={"Address"}
+                                onChangeText={(val) => setaddress(val)}
+                                value={address}
+                                Icons={<FontAwesome5 name="pencil-alt" size={20} />}
+                            />
+                            <InputText
+                                lable={"About"}
+                                Icon={<MaterialCommunityIcons name="note" size={25} />}
+                                placeholder={"about"}
+                                onChangeText={(val) => setabout(val)}
+                                value={about}
+                                Icons={<FontAwesome5 name="pencil-alt" size={20} />}
+                                multiline={true}
+                                viewstyle={{ alignItems: 'flex-start', paddingTop: moderateScale(10) }}
+                                inputStyle={{ paddingTop: moderateScale(-10) }}
+                            />
+                            <SubHeading text={"Time schedule"} />
+                            <View>
+                                <InputText
+                                    lable={"Days"}
+                                    placeholder={"Monday to thursday"}
+                                    Icons={<FontAwesome5 name="pencil-alt" size={20} />}
+                                    onChangeText={(val) => { setDaysX(val) }}
+                                    value={daysX}
                                 />
-                            <InputText
-                                lable={"Timing"}
-                            placeholder={"08:00 am to 10:00 pm"}
-                                Icons={<FontAwesome5 name="pencil-alt" size={20} />} 
-                                onChangeText={(val)=>{setTimeY(val)}}
-                                value = {timeY}/>
-                            <View style={{ backgroundColor: 'white', marginTop: 20, alignSelf: 'center', borderRadius: 12 }}>
-                                <AntDesign name={show1 === false ? 'plus' : "minus"} size={30} onPress={() => setshow1(!show1)} />
+                                <InputText
+                                    lable={"Timing"}
+                                    placeholder={"08:00 am to 10:00 pm"}
+                                    Icons={<FontAwesome5 name="pencil-alt" size={20} />}
+                                    onChangeText={(val) => { setTimeX(val) }}
+                                    value={timeX}
+                                />
                             </View>
-                        </View>}
-
-                        {show1 && <View>
-                            <InputText 
-                                lable={"Days"}
-                            placeholder={"Monday to thursday"}
-                                Icons={<FontAwesome5 name="pencil-alt" size={20} />} 
-                                onChangeText={(val)=>{setDaysZ(val)}}
-                                value = {daysZ}
+                            <View style={{ backgroundColor: 'white', marginTop: 20, alignSelf: 'center', borderRadius: 12 }}>
+                                <AntDesign name={show === false ? 'plus' : "minus"} size={30} onPress={() => setshow(!show)} />
+                            </View>
+                            {show && <View>
+                                <InputText
+                                    lable={"Days"}
+                                    placeholder={"Monday to thursday"}
+                                    Icons={<FontAwesome5 name="pencil-alt" size={20} />}
+                                    onChangeText={(val) => { setDaysY(val) }}
+                                    value={daysY}
                                 />
-                            <InputText
-                                lable={"Timing"}
-                             placeholder={"08:00 am to 10:00 pm"}
-                                Icons={<FontAwesome5 name="pencil-alt" size={20} />} 
-                                onChangeText={(val)=>{setTimeZ(val)}}
-                                value = {timeZ}/>
-                        </View>}
+                                <InputText
+                                    lable={"Timing"}
+                                    placeholder={"08:00 am to 10:00 pm"}
+                                    Icons={<FontAwesome5 name="pencil-alt" size={20} />}
+                                    onChangeText={(val) => { setTimeY(val) }}
+                                    value={timeY} />
+                                <View style={{ backgroundColor: 'white', marginTop: 20, alignSelf: 'center', borderRadius: 12 }}>
+                                    <AntDesign name={show1 === false ? 'plus' : "minus"} size={30} onPress={() => setshow1(!show1)} />
+                                </View>
+                            </View>}
+
+                            {show1 && <View>
+                                <InputText
+                                    lable={"Days"}
+                                    placeholder={"Monday to thursday"}
+                                    Icons={<FontAwesome5 name="pencil-alt" size={20} />}
+                                    onChangeText={(val) => { setDaysZ(val) }}
+                                    value={daysZ}
+                                />
+                                <InputText
+                                    lable={"Timing"}
+                                    placeholder={"08:00 am to 10:00 pm"}
+                                    Icons={<FontAwesome5 name="pencil-alt" size={20} />}
+                                    onChangeText={(val) => { setTimeZ(val) }}
+                                    value={timeZ} />
+                            </View>}
 
 
-                    </View>
+                        </View>
 
-                    <View style={{ alignItems: "center", marginTop:moderateScale(20) }}>
-                        <TouchableOpacity onPress={pickImage}>
-                            <Image source={{ uri: pic }}
-                                resizeMode="cover" style={styles.img} />
-                        </TouchableOpacity>
-                        <Text style={{ paddingTop:moderateScale(10), fontWeight: 'bold', fontSize:Font.body }}>Add Pic</Text>
+                        <View style={{ alignItems: "center", marginTop: moderateScale(20) }}>
+                            <TouchableOpacity onPress={pickImage}>
+                                <Image source={{ uri: pic }}
+                                    resizeMode="cover" style={styles.img} />
+                            </TouchableOpacity>
+                            <Text style={{ paddingTop: moderateScale(10), fontWeight: 'bold', fontSize: Font.body }}>Add Pic</Text>
+                        </View>
+                        <BtnComp btnStyle={{ marginTop: moderateScale(30) }}
+                            btnText={'Update Profile'}
+                            onPress={handleform}
+                        />
+                        <View>
+                        </View>
                     </View>
-                    <BtnComp btnStyle={{marginTop:moderateScale(30)}}
-                        btnText={'Update Profile'}
-                        onPress={handleform}
-                    />
-                    <View>         
-                    </View>
-                </View>
-                }
-                <CustomModal modalvisible={modalvisible} setmodalvisible={setmodalvisible} onPress={() => {
-                    setmodalvisible(false);
-                    navigation.navigate("Profile")
-                }} text={"Profile update Successfully"} />
-            </ScrollView>
+                    }
+                    <CustomModal modalvisible={modalvisible} setmodalvisible={setmodalvisible} onPress={() => {
+                        setmodalvisible(false);
+                        navigation.navigate("Profile")
+                    }} text={"Profile update Successfully"} />
+                </ScrollView>
+    </View>)}
+           
         </View>
     );
 };

@@ -50,11 +50,14 @@ const OtpChangePass = ({ navigation,route }) => {
                     )
                 }
                
-                await fetch(`${BaseUrl.ExpertBaseurl}/changUserPassword`, option)
+                await fetch(`${BaseUrl.SalonBaseurl}/changUserPassword`, option)
                     .then(res => res.json())
                     .then(d => {
                         if (d.status === "success") {
                             setmodalvisible(true)
+                       
+                      
+                    
                     } else {
 
                         Toast.show({
@@ -124,7 +127,7 @@ const OtpChangePass = ({ navigation,route }) => {
             </View>
             <CustomModal modalvisible={modalvisible} setmodalvisible={setmodalvisible} onPress={() => {
                 setmodalvisible(false);
-                navigation.navigate("LoginExpert")
+                navigation.navigate("Login")
             }} text={"Password Reset successfully"} />
         </View>
     );

@@ -9,19 +9,19 @@ import Lottie from 'lottie-react-native'
 const Loader = ({ viewStyle }) => {
     const animationRef = useRef()
     return (
-        // <View style={{...styles.container,...viewStyle}}>
-        //     <Text style={{fontSize:Font.subHeading,color:Colors.purple,fontWeight:'bold',marginBottom:moderateScale(10)}}>Loading...</Text>
-        //     <ActivityIndicator size={"large"} color={Colors.purple} />
-        // </View>
-        <View style={{ flex: 1}}>
-            <Lottie 
-            ref={animationRef}
-            source={require('../assests/dlf10_Ned1WY044V.json')}
-            loop={true}
-            autoPlay={true}
-            // size={10}
-            />
+        <View style={{...styles.container,...viewStyle}}>
+           
+            <ActivityIndicator size={"large"} color={Colors.purple} />
         </View>
+        // <View style={{ flex: 1}}>
+        //     <Lottie 
+        //     ref={animationRef}
+        //     source={require('../assests/dlf10_Ned1WY044V.json')}
+        //     loop={true}
+        //     autoPlay={true}
+        //     // size={10}
+        //     />
+        // </View>
     );
 };
 

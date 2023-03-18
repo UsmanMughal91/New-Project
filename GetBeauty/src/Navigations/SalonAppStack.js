@@ -4,7 +4,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from '../screens/SalonBooking/Login';
 import SignUp from '../screens/SalonBooking/SignUp';
 import Services from '../screens/SalonBooking/Services';
-import Location from '../screens/Location';
 import SplashScreen from '../screens/SplashScreen';
 import EditUserProfileC from '../screens/SalonBooking/EditUserProfileC';
 import Booking from '../screens/SalonBooking/Booking';
@@ -55,7 +54,6 @@ const SalonAppStack = () => {
             <Stack.Screen name="SalonAppDrawer" component={SalonAppDrawer} />
             <Stack.Screen name="Booking" component={Booking} />
             <Stack.Screen name="Services" component={Services} />
-            <Stack.Screen name="Location" component={Location} />
             <Stack.Screen name="EditUserProfileC" component={EditUserProfileC} />
             <Stack.Screen name="Payment" component={Payment} />
             <Stack.Screen name="UserProfile" component={UserProfile} />

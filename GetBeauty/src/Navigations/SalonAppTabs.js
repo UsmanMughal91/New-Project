@@ -49,7 +49,7 @@ const SalonAppTabs = () => {
             <BottomTab.Screen name='Appointment' component={Appointment}
                 options={{
                     tabBarLabel: "Appointment",
-                    tabBarBadge:0,
+                   
                     tabBarIcon: ({ color, size }) => (
                         <MaterialIcons name="event-note" size={25} color={"white"} />
                     ),

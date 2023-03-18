@@ -29,8 +29,7 @@ const ExpertAuthStack = () => {
             <Stack.Screen name="ForgotPass" component={ForgotPass} />
             <Stack.Screen name="OTP" component={OTP} />
             <Stack.Screen name="OtpChangePass" component={OtpChangePass} />
-            <Stack.Screen name="BeautyExpertStack" component={BeautyExpertStack} />
-           
+            <Stack.Screen name="BeautyExpertStack" component={BeautyExpertStack} />     
         </Stack.Navigator>
     );
 };

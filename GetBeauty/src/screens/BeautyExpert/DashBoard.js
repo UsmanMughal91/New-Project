@@ -84,82 +84,85 @@ const DashBoard = ({ navigation }) => {
     return (
 
         <View style={{ flex: 1 }}>
-
-            <ImageBackground source={require('../../assests/images/beauti.jpg')}
-                style={{ width: "100%", height: moderateScale(220) }}>
-                <View style={styles.picView}>
-                    <View style={styles.nav}>
-                        <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                            <FontAwesome name='navicon' size={20} color={Colors.black} />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.viewblack}>
-                        <Text style={styles.imgT}>Beauty Parlour</Text>
-                        <Text style={{ fontSize: scale(12), color: Colors.white }}>Beauty Parlour Booking App</Text>
-                        <View>
+{loading ? (<Loader/>):(
+    <View style={{flex:1}}>
+                    <ImageBackground source={require('../../assests/images/beauti.jpg')}
+                        style={{ width: "100%", height: moderateScale(220) }}>
+                        <View style={styles.picView}>
+                            <View style={styles.nav}>
+                                <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                                    <FontAwesome name='navicon' size={20} color={Colors.black} />
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.viewblack}>
+                                <Text style={styles.imgT}>Beauty Parlour</Text>
+                                <Text style={{ fontSize: scale(12), color: Colors.white }}>Beauty Parlour Booking App</Text>
+                                <View>
+                                </View>
+                            </View>
                         </View>
-                    </View>
-                </View>
-            </ImageBackground>
+                    </ImageBackground>
 
-            {loading && <Loader />}
-            {data && <ScrollView style={{ flex: 1, margin: moderateScale(10) }}>
+                    {data && <ScrollView style={{ flex: 1, margin: moderateScale(10) }}>
 
-                <View style={styles.view1}>
-                    <View style={styles.view2}>
-                        <Text style={styles.erng}>Monthly EARNING</Text>
-                        <TouchableOpacity onPress={() => navigation.navigate("EarningHistory")}>
-                            <Text style={{ fontSize: Font.body, fontWeight: 'bold', color: Colors.purple }}>History</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.chartView}>
-                        <BarChart
-                            data={{
-                                labels: ['Aug', "Sep", 'Oct', "Nov", "Dec", "Jan"],
-                                datasets: [{
-                                    data: [700, 500, 1000, 800, 950, 800]
-                                }]
-                            }}
-                            width={Dimensions.get("window").width - 50}
-                            height={moderateScale(200)}
-                            yAxisLabel="Rs"
-                            chartConfig={{
-                                backgroundGradientFrom: "white",
-                                backgroundGradientFromOpacity: 1,
-                                backgroundGradientTo: "white",
-                                backgroundGradientToOpacity: 1,
-                                decimalPlaces: 1,
-                                color: opacity => "black",
-                                barPercentage: 0.5,
-                                fillShadowGradient: Colors.purple,
-                                fillShadowGradientOpacity: 1,
-                            }}
-                            withInnerLines={false}
-                        />
-                    </View>
-                </View>
+                        <View style={styles.view1}>
+                            <View style={styles.view2}>
+                                <Text style={styles.erng}>Monthly EARNING</Text>
+                                <TouchableOpacity onPress={() => navigation.navigate("EarningHistory")}>
+                                    <Text style={{ fontSize: Font.body, fontWeight: 'bold', color: Colors.purple }}>History</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.chartView}>
+                                <BarChart
+                                    data={{
+                                        labels: ['Aug', "Sep", 'Oct', "Nov", "Dec", "Jan"],
+                                        datasets: [{
+                                            data: [700, 500, 1000, 800, 950, 800]
+                                        }]
+                                    }}
+                                    width={Dimensions.get("window").width - 50}
+                                    height={moderateScale(200)}
+                                    yAxisLabel="Rs"
+                                    chartConfig={{
+                                        backgroundGradientFrom: "white",
+                                        backgroundGradientFromOpacity: 1,
+                                        backgroundGradientTo: "white",
+                                        backgroundGradientToOpacity: 1,
+                                        decimalPlaces: 1,
+                                        color: opacity => "black",
+                                        barPercentage: 0.5,
+                                        fillShadowGradient: Colors.purple,
+                                        fillShadowGradientOpacity: 1,
+                                    }}
+                                    withInnerLines={false}
+                                />
+                            </View>
+                        </View>
 
-                <View style={styles.view3}>
-                    <View style={styles.view4}>
-                        <Text style={styles.text}>Total  Services</Text>
-                        <Text style={styles.number}>{TotalServices}</Text>
-                    </View>
-                    <View style={{...styles.view4,marginHorizontal:moderateScale(10)}}>
-                        <Text style={styles.text}>Pending  Orders</Text>
-                        <Text style={styles.number}>{PendingOrders}</Text>
-                    </View>
-                    <View style={styles.view4}>
-                        <Text style={styles.text}>Completed Orders</Text>
-                        <Text style={styles.number}>{CompletedOrders}</Text>
-                    </View>
-                </View>
-                <View style={styles.view5}>
-                    <Text style={{ fontSize:Font.body, margin:moderateScale(10), fontWeight: 'bold', color: 'gray' }}>TOTAL EARNING</Text>
-                    <View style={{ alignSelf: "center" }}>
-                        <Text style={{ fontSize: Font.Heading, color: Colors.purple }}>20345 PKR</Text>
-                    </View>
-                </View>
-            </ScrollView >}
+                        <View style={styles.view3}>
+                            <View style={styles.view4}>
+                                <Text style={styles.text}>Total  Services</Text>
+                                <Text style={styles.number}>{TotalServices}</Text>
+                            </View>
+                            <View style={{ ...styles.view4, marginHorizontal: moderateScale(10) }}>
+                                <Text style={styles.text}>Pending  Orders</Text>
+                                <Text style={styles.number}>{PendingOrders}</Text>
+                            </View>
+                            <View style={styles.view4}>
+                                <Text style={styles.text}>Completed Orders</Text>
+                                <Text style={styles.number}>{CompletedOrders}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.view5}>
+                            <Text style={{ fontSize: Font.body, margin: moderateScale(10), fontWeight: 'bold', color: 'gray' }}>TOTAL EARNING</Text>
+                            <View style={{ alignSelf: "center" }}>
+                                <Text style={{ fontSize: Font.Heading, color: Colors.purple }}>20345 PKR</Text>
+                            </View>
+                        </View>
+                    </ScrollView >}
+    </View>
+)}
+          
         </View>
     );
 };

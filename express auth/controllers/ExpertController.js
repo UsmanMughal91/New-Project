@@ -102,24 +102,29 @@ class ExpertController {
         if (email) {
             const user = await ExpertModel.findOne({ email: email })
             if (user) {
+                const otp = Math.floor(1000 + Math.random() * 9000)
+                user.otp = otp;
+                await user.save();
                 const secret = user._id + process.env.JWT_SECRET_KEY
                 const token = jwt.sign({ userID: user._id }, secret, { expiresIn: '15m' })
-                const link = `http://127.0.0.1:3000/api/Expert/reset/${user._id}/${token}`
-                console.log(link)
-                // // Send Email
-                // let info = await transporter.sendMail({
-                //   from: process.env.EMAIL_FROM,
-                //   to: user.email,
-                //   subject: "GeekShop - Password Reset Link",
-                //   html: `<a href=${link}>Click Here</a> to Reset Your Password`
-                // })
-                res.send({ "status": "success", "message": "Password Reset Email Sent... Please Check Your Email" })
+                // Send Email
+                await transporter.sendMail({
+                    from: 'noreply@mail.com',
+                    to: user.email,
+                    subject: "GetBeauty - Password Reset Otp",
+                    html: `
+                  <p>You requested for password reset</p>
+                  <h5>your OTP to reset password is <br><h1>${otp}</h1></h5>
+                  `,
+                })
+                res.send({ "status": "success", "message": "Password Reset Email Sent... Please Check Your Email", otp: otp, token: token })
             } else {
                 res.send({ "status": "failed", "message": "Email doesn't exists" })
             }
         } else {
             res.send({ "status": "failed", "message": "Email Field is Required" })
         }
+
     }
 
     static userPasswordReset = async (req, res) => {
@@ -224,7 +229,7 @@ class ExpertController {
 
     static addservice = async (req, res) => {
         const data = req.body
-        console.log(data)
+        console.log("service data",data)
         const token = req.body.token
         var d = JSON.parse(atob(token.split('.')[1]));
         const exists = await ServiceModel.findOne({serviceName:data.serviceName})

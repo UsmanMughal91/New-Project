@@ -152,74 +152,77 @@ const EditUserProfileC = ({ navigation }) => {
     }, [])
     return (
         <View style={{ flex: 1 }}>
-            <Header onPress={() => navigation.goBack()} />
-            <Toast config={toastConfig} />
-            <ScrollView>
-                {loading && <Loader viewStyle={{ marginTop: 330 }} />}
-                {data && <View style={{ margin: moderateScale(10) }}>
+            {loading ? (<Loader/>):(<View style={{flex:1}}>
+                <Header onPress={() => navigation.goBack()} />
+                <Toast config={toastConfig} />
+                <ScrollView>
 
-                    <Heading text={"Edit Profile"} />
+                    {data && <View style={{ margin: moderateScale(10) }}>
 
-                    <View style={{ marginTop: moderateScale(10) }}>
-                        <InputText
-                            lable={"Name"}
-                            Icon={<Ionicons name="person" size={25} />}
-                            placeholder={"Enter Name"}
-                            value={name}
-                            onChangeText={(val) => setname(val)}
-                            Icons={<FontAwesome5 name="pencil-alt" size={20} />}
-                        />
+                        <Heading text={"Edit Profile"} />
 
-
-                        <InputText
-                            lable={"Phone"}
-                            Icon={<MaterialCommunityIcons name="phone" size={25} />}
-                            placeholder={"Enter Contact Number"}
-                            onChangeText={(val) => setphone(val)}
-                            keyboardType="phone-pad"
-                            value={phone}
-                            Icons={<FontAwesome5 name="pencil-alt" size={20} />}
-                        />
+                        <View style={{ marginTop: moderateScale(10) }}>
+                            <InputText
+                                lable={"Name"}
+                                Icon={<Ionicons name="person" size={25} />}
+                                placeholder={"Enter Name"}
+                                value={name}
+                                onChangeText={(val) => setname(val)}
+                                Icons={<FontAwesome5 name="pencil-alt" size={20} />}
+                            />
 
 
-                        <InputText
-                            lable={"Address"}
-                            Icon={<MaterialCommunityIcons name="home" size={25} />}
-                            placeholder={"Enter Address"}
-                            onChangeText={(val) => setaddress(val)}
-                            value={address}
-                            Icons={<FontAwesome5 name="pencil-alt" size={20} />}
-                        />
-                        <InputText
-                            lable={"About"}
-                            Icon={<MaterialCommunityIcons name="note" size={25} />}
-                            placeholder={"about"}
-                            onChangeText={(val) => setabout(val)}
-                            value={about}
-                            Icons={<FontAwesome5 name="pencil-alt" size={20} />}
-                            multiline={true}
-                           viewstyle={{alignItems:'flex-start',paddingTop:moderateScale(10)}}
-                           inputStyle={{paddingTop:moderateScale(-10)}}
+                            <InputText
+                                lable={"Phone"}
+                                Icon={<MaterialCommunityIcons name="phone" size={25} />}
+                                placeholder={"Enter Contact Number"}
+                                onChangeText={(val) => setphone(val)}
+                                keyboardType="phone-pad"
+                                value={phone}
+                                Icons={<FontAwesome5 name="pencil-alt" size={20} />}
+                            />
+
+
+                            <InputText
+                                lable={"Address"}
+                                Icon={<MaterialCommunityIcons name="home" size={25} />}
+                                placeholder={"Enter Address"}
+                                onChangeText={(val) => setaddress(val)}
+                                value={address}
+                                Icons={<FontAwesome5 name="pencil-alt" size={20} />}
+                            />
+                            <InputText
+                                lable={"About"}
+                                Icon={<MaterialCommunityIcons name="note" size={25} />}
+                                placeholder={"about"}
+                                onChangeText={(val) => setabout(val)}
+                                value={about}
+                                Icons={<FontAwesome5 name="pencil-alt" size={20} />}
+                                multiline={true}
+                                viewstyle={{ alignItems: 'flex-start', paddingTop: moderateScale(10) }}
+                                inputStyle={{ paddingTop: moderateScale(-10) }}
+                            />
+                        </View>
+                        <View style={{ alignItems: "center", marginTop: 30 }}>
+                            <TouchableOpacity onPress={pickImage}>
+                                <Image source={{ uri: pic }}
+                                    resizeMode="cover" style={styles.img} />
+                            </TouchableOpacity>
+                            <Text style={{ paddingTop: moderateScale(10), fontSize: Font.body }}>Add Pic</Text>
+                        </View>
+                        <BtnComp btnStyle={{ marginTop: moderateScale(20), marginBottom: moderateScale(20) }}
+                            btnText={'Update Profile'}
+                            onPress={handleform}
                         />
                     </View>
-                    <View style={{ alignItems: "center", marginTop: 30 }}>
-                        <TouchableOpacity onPress={pickImage}>
-                            <Image source={{ uri: pic }}
-                                resizeMode="cover" style={styles.img} />
-                        </TouchableOpacity>
-                        <Text style={{ paddingTop:moderateScale(10), fontSize: Font.body }}>Add Pic</Text>
-                    </View>
-                    <BtnComp btnStyle={{marginTop:moderateScale(20),marginBottom:moderateScale(20)}}
-                        btnText={'Update Profile'}
-                        onPress={handleform}
-                    />
-                </View>
-                }
-                <CustomModal modalvisible={modalvisible} setmodalvisible={setmodalvisible} onPress={() => {
-                    setmodalvisible(false);
-                    navigation.goBack()
-                }} text={"Profile update Successfully"} />
-            </ScrollView>
+                    }
+                    <CustomModal modalvisible={modalvisible} setmodalvisible={setmodalvisible} onPress={() => {
+                        setmodalvisible(false);
+                        navigation.goBack()
+                    }} text={"Profile update Successfully"} />
+                </ScrollView>
+            </View>)}
+           
         </View>
     );
 };

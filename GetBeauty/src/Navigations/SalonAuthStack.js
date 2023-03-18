@@ -8,6 +8,8 @@ import SignUp from '../screens/SalonBooking/SignUp';
 import SplashScreen from '../screens/SplashScreen';
 import SalonAppStack from './SalonAppStack';
 import ForgotPass from '../screens/SalonBooking/ForgotPass';
+import OtpChangePass from '../screens/SalonBooking/OtpChangePassword';
+import OTP from '../screens/SalonBooking/Otp';
 
 
 const Stack = createNativeStackNavigator();
@@ -36,10 +38,12 @@ const [splash,setsplash] = useState(true)
             <Stack.Screen name="SignUp" component={SignUp} />
             <Stack.Screen name="SalonAppStack" component={SalonAppStack} />
             <Stack.Screen name="ForgotPass" component={ForgotPass} />
+            <Stack.Screen name="OTP" component={OTP} />
+            <Stack.Screen name="OtpChangePass" component={OtpChangePass} />
 
         </Stack.Navigator>
     );
-};
+}; 
 
 // define your styles
 const styles = StyleSheet.create({

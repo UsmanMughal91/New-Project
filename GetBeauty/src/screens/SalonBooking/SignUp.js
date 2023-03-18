@@ -101,10 +101,13 @@ const SignUp = ({ navigation }) => {
         }
     }
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{flex:1}}>
+            <Heading text={"Signup"} />
             <Toast config={toastConfig} />
-            <ScrollView style={{ margin: 20 }}>
-                <Heading text={"Signup"} />
+           
+            <ScrollView style={{ margin:moderateScale(20)}}>
+               
+               
                 <View>
                     <InputText
                         lable={"Name"}

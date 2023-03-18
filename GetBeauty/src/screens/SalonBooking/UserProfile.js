@@ -44,29 +44,32 @@ const UserProfile = ({ navigation }) => {
     }, [])
     return (
         <View style={{ flex: 1 }}>
-            <Header text={"no"} onPress={() => navigation.goBack()} />
-            <View style={styles.container}>
-                <ScrollView>
-                    {loading && <Loader viewStyle={{ marginTop: 320 }} />}
-                    {data && <View>
-                        <Heading text={"My Profile"} />
-                        <View style={{ alignItems: 'center', marginTop: moderateScale(10) }}>
-                            <Image source={{ uri: data.pic }}
-                                style={styles.img} />
-                            <Heading text={data.name} />
-                            <SubHeading text={data.parlourName} viewStyle={{alignItems:'center'}}/> 
-                        </View>
-                        <SubHeading text={"About"}  />
-                        <Text style={styles.text}>{data.about ? data.about : "Please add more details in Edit Profile."}</Text>
-                        <SubHeading text={"Address"}  />
-                        <Text style={styles.text}>{data.address}</Text>
-                        <SubHeading text={"Contact"}/>
-                        <Text style={styles.text}>{data.phone}</Text>
-                        <Text style={styles.text}>{data.email}</Text>
+            {loading ? (<Loader/>):(<View style={{flex:1}}>
+                <Header text={"no"} onPress={() => navigation.goBack()} />
+                <View style={styles.container}>
+                    <ScrollView>
+                        {loading && <Loader viewStyle={{ marginTop: 320 }} />}
+                        {data && <View>
+                            <Heading text={"My Profile"} />
+                            <View style={{ alignItems: 'center', marginTop: moderateScale(10) }}>
+                                <Image source={{ uri: data.pic }}
+                                    style={styles.img} />
+                                <Heading text={data.name} />
+                                <SubHeading text={data.parlourName} viewStyle={{ alignItems: 'center' }} />
+                            </View>
+                            <SubHeading text={"About"} />
+                            <Text style={styles.text}>{data.about ? data.about : "Please add more details in Edit Profile."}</Text>
+                            <SubHeading text={"Address"} />
+                            <Text style={styles.text}>{data.address}</Text>
+                            <SubHeading text={"Contact"} />
+                            <Text style={styles.text}>{data.phone}</Text>
+                            <Text style={styles.text}>{data.email}</Text>
 
-                    </View>}
-                </ScrollView>
-            </View>
+                        </View>}
+                    </ScrollView>
+                </View>
+            </View>)}
+           
         </View>
     );
 };

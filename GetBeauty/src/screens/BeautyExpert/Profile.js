@@ -47,17 +47,18 @@ const Profile = ({ navigation }) => {
     }, [])
     return (
         <View style={{ flex: 1 }}>
-            <Header text="no" onPress={() => navigation.goBack()} />
-          
+            {loading? (<Loader/>):(<View style={{flex:1}}>
+                <Header text="no" onPress={() => navigation.goBack()} />
+
                 <ScrollView style={styles.container}>
-                    {loading && <Loader viewStyle={{ marginTop: 320 }} />}
+                  
                     {data && <View>
                         <Heading text={"My Profile"} />
-                        <View style={{ alignItems: 'center', marginTop:moderateScale(10) }}>
+                        <View style={{ alignItems: 'center', marginTop: moderateScale(10) }}>
                             <Image source={{ uri: data.pic }}
                                 style={styles.img} />
                             <SubHeading text={data.parlourName} />
-                            <Text style={{ fontSize: Font.text, marginBottom:moderateScale(10) }}>{data.name}</Text>
+                            <Text style={{ fontSize: Font.text, marginBottom: moderateScale(10) }}>{data.name}</Text>
 
                         </View>
                         <SubHeading text={"About"} />
@@ -68,7 +69,7 @@ const Profile = ({ navigation }) => {
                                 <Text style={styles.text}>{data.daysX}</Text>
                                 <Text style={styles.text}>{data.timeX}</Text>
                             </View> : <Text>No time schedule found</Text>}
-                        {data.daysY?
+                        {data.daysY ?
                             <View style={{ flexDirection: "row", justifyContent: 'space-between' }}>
                                 <Text style={styles.text}>{data.daysY}</Text>
                                 <Text style={styles.text}>{data.timeY}</Text>
@@ -87,6 +88,8 @@ const Profile = ({ navigation }) => {
                         <Text style={styles.text}>{data.email}</Text>
                     </View>}
                 </ScrollView>
+            </View>)}
+          
            
         </View>
     );

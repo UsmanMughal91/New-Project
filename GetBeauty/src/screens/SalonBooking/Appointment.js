@@ -51,48 +51,51 @@ const Appointment = ({ navigation }) => {
 
     return (
         <View style={{ flex: 1 }}>
-            <Header text={"no"} onPress={() => navigation.goBack()} />
-            <ScrollView>
-                <View style={{ margin: moderateScale(10) }}>
-                    <Heading text={"Appointment History"} />
-                    <View style={styles.barView}>
-                        <Text style={styles.barText}>Beauty Experts</Text>
-                        <Text style={styles.barText}>Description</Text>
-                        <Text style={styles.barText}>Status</Text>
-                    </View>
-                    {loading && <Loader />}
-                    {data && <FlatList
-                        data={data}
-                        keyExtractor={data => data._id}
-                        renderItem={({ item }) => (
-                            <View style={styles.flatView}>
-                                <View style={{ flexDirection: "row" }}>
-                                    <View>
-                                        <Image source={{ uri: item.expert.pic }} style={styles.img} />
+            {loading ? (<Loader/>):(<View style={{flex:1}}>
+                <Header text={"no"} onPress={() => navigation.goBack()} />
+                <ScrollView>
+                    <View style={{ margin: moderateScale(10) }}>
+                        <Heading text={"Appointment History"} />
+                        <View style={styles.barView}>
+                            <Text style={styles.barText}>Beauty Experts</Text>
+                            <Text style={styles.barText}>Description</Text>
+                            <Text style={styles.barText}>Status</Text>
+                        </View>
+                        {loading && <Loader />}
+                        {data ? (<View><FlatList
+                            data={data}
+                            keyExtractor={data => data._id}
+                            renderItem={({ item }) => (
+                                <View style={styles.flatView}>
+                                    <View style={{ flexDirection: "row" }}>
+                                        <View>
+                                            <Image source={{ uri: item.expert.pic }} style={styles.img} />
+                                        </View>
+                                        <View style={{ width: moderateScale(140) }}>
+                                            <Text style={styles.flatlist}>{item.expert.parlourName}</Text>
+                                            <Text style={{ marginLeft: moderateScale(10), fontSize: Font.text }}>{item.expert.name}</Text>
+                                        </View>
+                                        <View style={{ width: moderateScale(100) }}>
+                                            <Text style={{ fontSize: Font.text }}>{item.date}</Text>
+                                            <Text style={{ fontSize: Font.text }}>{item.service.servicePrice} PKR</Text>
+                                        </View>
                                     </View>
-                                    <View style={{ width: moderateScale(140) }}>
-                                        <Text style={styles.flatlist}>{item.expert.parlourName}</Text>
-                                        <Text style={{ marginLeft: moderateScale(10), fontSize:Font.text }}>{item.expert.name}</Text>
+                                    <View style={{ alignSelf: 'center' }} >
+                                        <View style={styles.status}>
+                                            <Text style={styles.statusT}>{item.status}</Text>
+                                        </View>
+                                        {item.status === "Accepted" ? <TouchableOpacity style={{ ...styles.status, marginTop: moderateScale(7) }}
+                                            onPress={() => navigation.navigate('Payment', { item })}>
+                                            <Text style={styles.statusT}>Payment</Text>
+                                        </TouchableOpacity> : null}
                                     </View>
-                                    <View style={{ width: moderateScale(100) }}>
-                                        <Text style={{fontSize:Font.text}}>{item.date}</Text>
-                                        <Text style={{ fontSize:Font.text }}>{item.service.servicePrice} PKR</Text>
-                                    </View>
-                                </View>
-                                <View style={{ alignSelf: 'center'}} >
-                                    <View style={styles.status}>
-                                        <Text style={styles.statusT}>{item.status}</Text>
-                                    </View>
-                                    {item.status === "Accepted" ? <TouchableOpacity style={{...styles.status,marginTop:moderateScale(7)}}
-                                        onPress={() => navigation.navigate('Payment', { item })}>
-                                        <Text style={styles.statusT}>Payment</Text>
-                                    </TouchableOpacity> : null}
-                                </View>
 
-                            </View>)
-                        } />}
-                </View>
-            </ScrollView>
+                                </View>)
+                            } /></View>) : (<Text>Empty</Text>)}
+                    </View>
+                </ScrollView>
+            </View>)}
+            
         </View>
     );
 };

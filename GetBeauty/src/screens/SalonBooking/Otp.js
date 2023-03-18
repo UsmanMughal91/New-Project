@@ -44,7 +44,7 @@ const OTP = ({ navigation,route }) => {
                 <Heading text={"Forgot Password"} />
                 <View style={{ marginTop: 30 }}>
                     <InputText placeholder={"OTP"}
-                        lable={"Enter OTP"}
+                    lable={"Enter OTP"}
                         onChangeText={(val)=>{setotp(val)}} />
                     <View style={{ marginTop: 30 }}>
 

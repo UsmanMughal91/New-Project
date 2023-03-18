@@ -31,54 +31,57 @@ const ParlorList = ({ navigation }) => {
     return (
 
         <View style={styles.container}>
-            <ImageBackground source={require('../../assests/images/beauty.jpg')}
-                style={{ width: "100%", height: moderateScale(220) }}>
-                <View style={styles.picView}>
-                    <View style={styles.nav}>
-                        <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                            <FontAwesome name='navicon' size={20} color={Colors.black} />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.viewblack}>
-                        <Text style={{ fontSize: scale(27), color: Colors.white, fontWeight: 'bold', marginLeft: moderateScale(5) }}>Beauty Parlour</Text>
-                        <Text style={{ fontSize: scale(12), color: Colors.white, marginBottom: moderateScale(10), marginLeft: moderateScale(5) }}>Beauty Parlour Booking App</Text>
-                        <View>
+        {loading ? (<Loader/>) : (<View style={{flex:1}}>
+                <ImageBackground source={require('../../assests/images/beauty.jpg')}
+                    style={{ width: "100%", height: moderateScale(220) }}>
+                    <View style={styles.picView}>
+                        <View style={styles.nav}>
+                            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                                <FontAwesome name='navicon' size={20} color={Colors.black} />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.viewblack}>
+                            <Text style={{ fontSize: scale(27), color: Colors.white, fontWeight: 'bold', marginLeft: moderateScale(5) }}>Beauty Parlour</Text>
+                            <Text style={{ fontSize: scale(12), color: Colors.white, marginBottom: moderateScale(10), marginLeft: moderateScale(5) }}>Beauty Parlour Booking App</Text>
+                            <View>
+                            </View>
                         </View>
                     </View>
-                </View>
-            </ImageBackground>
+                </ImageBackground>
 
-            <ScrollView nestedScrollEnabled>
-                <SubHeading text={"Select Parlours"} viewStyle={{marginLeft:moderateScale(20)}} textStyle={{fontWeight:'bold'}}/>
-                <View style={{margin:moderateScale(10)}}>
-                    {loading && <Loader />}
-                    {data && <FlatList
-                        data={data}
-                        keyExtractor={data => data._id}
-                        renderItem={({ item }) => (
-                            <View >
+                <ScrollView nestedScrollEnabled>
+                    <SubHeading text={"Select Parlours"} viewStyle={{ marginLeft: moderateScale(20) }} textStyle={{ fontWeight: 'bold' }} />
+                    <View style={{ margin: moderateScale(10) }}>
+                        {loading && <Loader />}
+                        {data && <FlatList
+                            data={data}
+                            keyExtractor={data => data._id}
+                            renderItem={({ item }) => (
                                 <View >
-                                    <View style={styles.flatlistview}>
-                                        <TouchableOpacity >
-                                            <Image source={{ uri: item.pic }}
-                                                style={styles.img}
-                                            />
-                                        </TouchableOpacity>
-                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                            <TouchableOpacity onPress={() => navigation.navigate('SeeProfile', { item })}
-                                             style={{ marginLeft:moderateScale(10), width: "80%" }}>
-                                                <Text style={{ color:Colors.black, fontSize:Font.list,fontWeight:'500' }}>{item.parlourName}</Text>
-                                                <Text style={{fontSize:Font.text}}>{item.name}</Text>
+                                    <View >
+                                        <View style={styles.flatlistview}>
+                                            <TouchableOpacity >
+                                                <Image source={{ uri: item.pic }}
+                                                    style={styles.img}
+                                                />
                                             </TouchableOpacity>
-                                        </View>
-                                        <View>
+                                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                <TouchableOpacity onPress={() => navigation.navigate('SeeProfile', { item })}
+                                                    style={{ marginLeft: moderateScale(10), width: "80%" }}>
+                                                    <Text style={{ color: Colors.black, fontSize: Font.list, fontWeight: '500' }}>{item.parlourName}</Text>
+                                                    <Text style={{ fontSize: Font.text }}>{item.name}</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                            <View>
+                                            </View>
                                         </View>
                                     </View>
                                 </View>
-                            </View>
-                        )} />}
-                </View>
-            </ScrollView>
+                            )} />}
+                    </View>
+                </ScrollView>
+        </View>)}
+            
         </View>
     );
 }

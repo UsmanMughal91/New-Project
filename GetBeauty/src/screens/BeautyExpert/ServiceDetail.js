@@ -14,6 +14,7 @@ const ServiceDetail = ({ navigation, route }) => {
     }, [])
     return (
         <View>
+        
             <Header onPress={() => navigation.goBack()} />
 
             <View style={{ margin: moderateScale(10) }}>

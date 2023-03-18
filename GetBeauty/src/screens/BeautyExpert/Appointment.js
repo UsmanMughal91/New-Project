@@ -50,48 +50,51 @@ const Appointment = ({ navigation }) => {
     }, [refresh])
     return (
         <View>
-            <Header text="no" onPress={() => navigation.goBack()} />
+            {loading ? (<Loader/>):(<View>
+                <Header text="no" onPress={() => navigation.goBack()} />
 
-            <View style={styles.container}>
-                <Heading text={"Appointment History"} />
+                <View style={styles.container}>
+                    <Heading text={"Appointment History"} />
 
 
-                <View>
-                    {loading && <Loader viewStyle={{ marginTop: 250 }} />}
+                    <View>
 
-                    {data && <FlatList
 
-                        data={data.filter((item) => { if (item.status !== "Requested") return item })}
-                        keyExtractor={data => data._id}
-                        renderItem={({ item }) => (
-                            <View style={{ flex: 1, }}>
+                        {data && <FlatList
 
-                                <View style={styles.view}>
-                                    <View style={{flexDirection:'row'}}>
-                                        <View>
-                                            <Image source={{ uri: item.user.pic }}
-                                                style={styles.img}
-                                            />
+                            data={data.filter((item) => { if (item.status !== "Requested") return item })}
+                            keyExtractor={data => data._id}
+                            renderItem={({ item }) => (
+                                <View style={{ flex: 1, }}>
+
+                                    <View style={styles.view}>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <View>
+                                                <Image source={{ uri: item.user.pic }}
+                                                    style={styles.img}
+                                                />
+                                            </View>
+                                            <TouchableOpacity style={{ marginLeft: moderateScale(10), width: moderateScale(210) }}
+                                                onPress={() => { if (item.status === "Pending") { navigation.navigate('CompleteOrder', { item, setrefresh }) } }}>
+                                                <Text style={{ color: Colors.black, fontSize: Font.body }}>{item.user.name}</Text>
+                                                <Text>{item.date}</Text>
+                                                <Text>{item.service.servicePrice}</Text>
+                                            </TouchableOpacity>
+
                                         </View>
-                                        <TouchableOpacity style={{ marginLeft: moderateScale(10), width: moderateScale(210) }}
-                                         onPress={() => { if (item.status === "Pending") { navigation.navigate('CompleteOrder', { item, setrefresh }) } }}>
-                                            <Text style={{ color: Colors.black, fontSize: Font.body }}>{item.user.name}</Text>
-                                            <Text>{item.date}</Text>
-                                            <Text>{item.service.servicePrice}</Text>
-                                        </TouchableOpacity>
 
+                                        <View style={styles.view2}>
+                                            <Text style={{ color: Colors.purple }}>{item.status}</Text>
+                                        </View>
                                     </View>
-                                  
-                                    <View style={styles.view2}>
-                                        <Text style={{ color: Colors.purple }}>{item.status}</Text>
-                                    </View>
+
                                 </View>
 
-                            </View>
-
-                        )} />}
+                            )} />}
+                    </View>
                 </View>
-            </View>
+            </View>)}
+            
 
         </View>
     );

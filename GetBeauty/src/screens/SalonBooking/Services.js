@@ -51,57 +51,60 @@ const Services = ({ navigation, route }) => {
     }, [])
     return (
         <View style={{ flex: 1 }}>
-            <Header onPress={() => navigation.goBack()} />
-            <ScrollView>
-                <Heading text={"Services"} />
-                <View style={styles.container}>
-                    <View style={styles.sView}>
-                        <View>
-                            <TextInput placeholder='Search Service'
-                                style={{ fontSize: Font.body }}
-                                onChangeText={(val) => { setSearch(val) }} />
+            {loading ? (<Loader/>):(<View style={{flex:1}}>
+                <Header onPress={() => navigation.goBack()} />
+                <ScrollView>
+                    <Heading text={"Services"} />
+                    <View style={styles.container}>
+                        <View style={styles.sView}>
+                            <View>
+                                <TextInput placeholder='Search Service'
+                                    style={{ fontSize: Font.body }}
+                                    onChangeText={(val) => { setSearch(val) }} />
+                            </View>
+                            <View>
+                                <TouchableOpacity style={styles.searchb}>
+                                    <Text style={{ color: Colors.white, fontSize: Font.text }}>Search</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                        <View>
-                            <TouchableOpacity style={styles.searchb}>
-                                <Text style={{ color: Colors.white, fontSize: Font.text }}>Search</Text>
-                            </TouchableOpacity>
-                        </View>
+
+                        {data && <FlatList
+                            data={data.filter((item) => { if (item.serviceName.includes(search)) { return item } })}
+                            keyExtractor={data => data._id}
+                            ListEmptyComponent={() => {
+                                return (
+                                    <View>
+                                        <Text style={{ color: Colors.purple, textAlign: 'center' }}>No Service found</Text>
+                                    </View>
+                                );
+                            }}
+                            renderItem={({ item }) => (
+                                <View style={{ flex: 1 }}>
+                                    <View style={styles.flatView}>
+                                        <View style={{ flexDirection: "row", alignItems: 'center' }}>
+                                            <View>
+                                                <Image source={{ uri: item.pic }} style={styles.img} />
+                                            </View>
+                                            <View style={{ marginLeft: moderateScale(10) }}>
+                                                <TouchableOpacity onPress={() => navigation.navigate('ServiceDetail', { item, profile })}>
+                                                    <Text style={{ fontSize: Font.body, color: Colors.black }}>{item.serviceName}</Text>
+                                                </TouchableOpacity>
+
+                                            </View>
+                                        </View>
+                                        <View style={{ paddingRight: moderateScale(10) }}>
+                                            <Ionicons name='chevron-forward' size={20}
+                                                onPress={() => navigation.navigate('ServiceDetail', { item, profile })} />
+                                        </View>
+
+                                    </View>
+
+                                </View>)} />}
                     </View>
-                    {loading && <Loader />}
-                    {data && <FlatList
-                        data={data.filter((item) => { if (item.serviceName.includes(search)) { return item } })}
-                        keyExtractor={data => data._id}
-                        ListEmptyComponent={() => {
-                            return (
-                                <View>
-                                    <Text style={{ color: Colors.purple, textAlign: 'center' }}>No Service found</Text>
-                                </View>
-                            );
-                        }}
-                        renderItem={({ item }) => (
-                            <View style={{ flex: 1 }}>
-                                <View style={styles.flatView}>
-                                    <View style={{flexDirection:"row",alignItems:'center'}}>
-                                        <View>
-                                            <Image source={{ uri: item.pic }} style={styles.img} />
-                                        </View>
-                                        <View style={{ marginLeft: moderateScale(10) }}>
-                                            <TouchableOpacity onPress={() => navigation.navigate('ServiceDetail', { item, profile })}>
-                                                <Text style={{ fontSize: Font.body, color: Colors.black }}>{item.serviceName}</Text>
-                                            </TouchableOpacity>
-
-                                        </View>
-                                    </View>
-                                    <View style={{paddingRight:moderateScale(10)}}>
-                                        <Ionicons name='chevron-forward' size={20}
-                                            onPress={() => navigation.navigate('ServiceDetail', { item, profile })}/>
-                                    </View>
-                                   
-                                </View>
-
-                            </View>)} />}
-                </View>
-            </ScrollView>
+                </ScrollView>
+            </View>)}
+           
         </View>
     );
 };

@@ -7,8 +7,9 @@ import {
 import Colors from '../Styles/Colors';
 import Font from '../Styles/Font';
 import { View, Text, Image, StyleSheet } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import { getToken } from '../../services/AsyncStorage';
 import BaseUrl from '../baseUrl/BaseUrl';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -92,6 +93,14 @@ const ExpertCustomDrawer = (props) => {
                         onPress={() => navigation.navigate("ChangePass")}
                         labelStyle={styles.lable}
                         icon={() => <MaterialCommunityIcons name='lock-outline' size={25} />}
+                    />
+                    <DrawerItem
+                        pressColor={Colors.purple}
+                        inactiveBackgroundColor='#dfd4f1'
+                        label="Add Location"
+                        onPress={() => navigation.navigate("Location")}
+                        labelStyle={styles.lable}
+                        icon={() => <Ionicons name='location-outline' size={25} />}
                     />
                     <DrawerItem
                         pressColor={Colors.purple}
