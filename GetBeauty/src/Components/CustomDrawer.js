@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState ,useCallback} from 'react';
 import {
     DrawerContentScrollView,
     DrawerItemList,
@@ -13,10 +13,19 @@ import BaseUrl from '../baseUrl/BaseUrl';
 import { getToken } from '../../services/AsyncStorage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { moderateScale } from 'react-native-size-matters';
-
+import { RefreshControl } from 'react-native';
 const CustomDrawer = (props) => {
-
+    const [refreshing, setRefreshing] = useState(false);
     const [data, setdata] = useState();
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        (async () => {
+            const token = await getToken() // getting token from storage
+            loadprofile(token);
+        })();
+        setRefreshing(false);
+    }, []);
 
     const loadprofile = async (token) => {
         const option = {
@@ -50,7 +59,16 @@ const CustomDrawer = (props) => {
     const { navigation } = props
     return (
         <View style={{ flex: 1,justifyContent:'space-between' }}>
-            <DrawerContentScrollView  {...props} >
+            <DrawerContentScrollView  {...props} 
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
+                        progressViewOffset={50}
+                        titleColor="#00ff00"
+                        colors={['purple', 'black', 'black']}
+                    />
+                }
+
+            >
 
                 <View style={styles.view1}>
                     {data && <>

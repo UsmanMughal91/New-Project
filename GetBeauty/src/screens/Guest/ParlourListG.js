@@ -9,6 +9,8 @@ import BaseUrl from '../../baseUrl/BaseUrl';
 import Loader from '../../Components/Loader';
 import { getToken } from '../../../services/AsyncStorage';
 import { scale, verticalScale, moderateScale, moderateVerticalScale } from 'react-native-size-matters';
+import SubHeading from '../../Components/SubHeading';
+
 // create a component
 const ParlorListG = ({ navigation }) => {
     const [data, setdata] = useState()
@@ -32,15 +34,11 @@ const ParlorListG = ({ navigation }) => {
 
         <View style={styles.container}>
             {loading ? (<Loader/>) : (
-                <View> 
+                <View style={{flex:1}}> 
                 <ImageBackground source={require('../../assests/images/beauty.jpg')}
                 style={{ width: "100%", height: moderateScale(220) }}>
                 <View style={styles.picView}>
-                    <View style={styles.nav}>
-                        <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                            <FontAwesome name='navicon' size={20} color={Colors.black} />
-                        </TouchableOpacity>
-                    </View>
+                  
                     <View style={styles.viewblack}>
                         <Text style={{ fontSize: scale(27), color: Colors.white, fontWeight: 'bold', marginLeft: moderateScale(5) }}>Beauty Parlour</Text>
                         <Text style={{ fontSize: scale(12), color: Colors.white, marginBottom: moderateScale(10), marginLeft: moderateScale(5) }}>Beauty Parlour Booking App</Text>
@@ -51,7 +49,7 @@ const ParlorListG = ({ navigation }) => {
             </ImageBackground>
 
             <ScrollView nestedScrollEnabled>
-                <Heading text={"Choose Parlour"} viewStyle={{ alignItems: 'center' }} />
+                        <SubHeading text={"Select Parlours"} viewStyle={{ marginLeft: moderateScale(20) }} textStyle={{ fontWeight: 'bold' }} />
                 <View style={{ margin: moderateScale(10) }}>
 
                     {data && <FlatList
@@ -110,7 +108,7 @@ const styles = StyleSheet.create({
     picView: {
         height: moderateVerticalScale(210),
         borderColor: 'white',
-        justifyContent: 'space-between'
+        justifyContent: 'flex-end'
     },
     viewblack: {
         marginLeft: moderateScale(10),

@@ -1,5 +1,5 @@
 //import liraries
-import React, { Component, useEffect, useState } from 'react';
+import React, { Component, useEffect, useState,useCallback } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView } from 'react-native';
 import Heading from '../../Components/Heading';
 import { getToken } from '../../../services/AsyncStorage';
@@ -9,8 +9,22 @@ import Colors from '../../Styles/Colors';
 import Font from '../../Styles/Font';
 import BaseUrl from '../../baseUrl/BaseUrl';
 import { moderateScale } from 'react-native-size-matters';
+import { RefreshControl } from 'react-native';
 // create a component
 const Request = ({ navigation }) => {
+
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        (async () => {
+            const token = await getToken()
+            loadRequests(token);
+        })();
+        setRefreshing(false);
+    }, []);
+
+
+    const [refreshing, setRefreshing] = useState(false);
     const [data, setdata] = useState("")
     const [refresh, setrefresh] = useState(false)
     const [loading, setloading] = useState(true);
@@ -103,16 +117,23 @@ const Request = ({ navigation }) => {
     }, [refresh])
     return (
         <View style={{flex:1}}>
-            {loading ? (<Loader/>):(<View>
+            {loading ? (<Loader/>):(<View style={{flex:1}}>
                 <Header text="no" onPress={() => navigation.goBack()} />
-                <View style={styles.container}>
+                <ScrollView refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
+                        progressViewOffset={50}
+                        titleColor="#00ff00"
+                        colors={['purple', 'black', 'black']}
+                    />
+                }
+                style={styles.container}>
                     <Heading text={"Customer Request"} />
                     {data && <FlatList
                         data={data.filter((item) => { if (item.status === "Requested") return item })}
                         keyExtractor={data => data._id}
                         renderItem={({ item }) => {
                             return (
-                                <View>
+                                <View style={{flex:1}}>
                                     <View style={styles.View}>
                                         <View style={{ width: moderateScale(60) }}>
                                             <Image source={{ uri: item.user.pic }}
@@ -140,7 +161,7 @@ const Request = ({ navigation }) => {
 
                             )
                         }} />}
-                </View>
+                </ScrollView>
 
             </View>)}
            
@@ -151,9 +172,11 @@ const Request = ({ navigation }) => {
 // define your styles
 const styles = StyleSheet.create({
     container: {
+        flex:1,
         margin: moderateScale(10),
     },
     View: {
+        flex:1,
         flexDirection: 'row',
         marginTop: moderateScale(10),
         marginBottom: moderateScale(10),

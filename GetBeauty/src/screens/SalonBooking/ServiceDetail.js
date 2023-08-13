@@ -1,5 +1,5 @@
 //import liraries
-import React, { Component } from 'react';
+import React, { Component,useCallback,useState } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Heading from '../../Components/Heading'
@@ -8,15 +8,30 @@ import Header from '../../Components/Header';
 import { moderateScale } from 'react-native-size-matters';
 import SubHeading from '../../Components/SubHeading';
 import Font from '../../Styles/Font';
+import { RefreshControl } from 'react-native';
 // create a component
 const ServiceDetail = ({ navigation, route }) => {
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        
+        setRefreshing(false);
+    }, []);
+
+    const [refreshing, setRefreshing] = useState(false);
     const item = route.params.item
     const profile = route.params.profile
 
     return (
         <View style={{ flex: 1 }}>
             <Header onPress={() => navigation.goBack()} />
-            <ScrollView>
+            <ScrollView refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
+                    progressViewOffset={50}
+                    titleColor="#00ff00"
+                    colors={['purple', 'black', 'black']}
+                />
+            }>
                 <Heading text={"About Service"} />
                 <View style={styles.container}>
                     <Image source={{ uri: item.pic }}

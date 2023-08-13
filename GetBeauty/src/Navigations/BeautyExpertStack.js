@@ -25,6 +25,7 @@ import EarningHistory from '../screens/BeautyExpert/EarningHistory';
 import ExpertDrawer from '../Navigations/ExpertDrawer'
 import { getToken } from '../../services/AsyncStorage';
 import Location from '../screens/BeautyExpert/Location';
+import EditService from '../screens/BeautyExpert/EditService';
 
 
 const Stack = createNativeStackNavigator();
@@ -67,7 +68,7 @@ const BeautyExpertStack = () => {
       <Stack.Screen name="ResetPass" component={ResetPass} />
       <Stack.Screen name="EarningHistory" component={EarningHistory} />
       <Stack.Screen name="DashBoard" component={DashBoard} />
-      <Stack.Screen name="Location" component={Location} />
+      <Stack.Screen name="EditService" component={EditService} />
     </Stack.Navigator>
   )
 };

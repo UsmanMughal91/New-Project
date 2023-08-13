@@ -1,5 +1,5 @@
 //import liraries
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useCallback } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity} from 'react-native';
 import Heading from '../../Components/Heading';
 import { getToken } from '../../../services/AsyncStorage';
@@ -9,11 +9,23 @@ import Colors from '../../Styles/Colors';
 import Font from '../../Styles/Font';
 import BaseUrl from '../../baseUrl/BaseUrl';
 import { moderateScale } from 'react-native-size-matters';
+import { RefreshControl } from 'react-native';
 // create a component
 const Appointment = ({ navigation }) => {
+    const [refreshing, setRefreshing] = useState(false);
     const [refresh, setrefresh] = useState(false)
     const [data, setdata] = useState()
     const [loading, setloading] = useState(true)
+
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        (async () => {
+            const token = await getToken()
+            loadRequests(token);
+        })();
+        setRefreshing(false);
+    }, []);
 
 
     const loadRequests = async (token) => {
@@ -49,18 +61,25 @@ const Appointment = ({ navigation }) => {
         })();
     }, [refresh])
     return (
-        <View>
-            {loading ? (<Loader/>):(<View>
+        <View style={{flex:1}}>
+            {loading ? (<Loader/>):(<View style={{flex:1}}>
                 <Header text="no" onPress={() => navigation.goBack()} />
 
                 <View style={styles.container}>
                     <Heading text={"Appointment History"} />
 
 
-                    <View>
+                    <View style={{flex:1}}>
 
 
                         {data && <FlatList
+                            refreshControl={
+                                <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
+                                    progressViewOffset={50}
+                                    titleColor="#00ff00"
+                                    colors={['purple', 'black', 'black']}
+                                />
+                            }
 
                             data={data.filter((item) => { if (item.status !== "Requested") return item })}
                             keyExtractor={data => data._id}
@@ -103,6 +122,7 @@ const Appointment = ({ navigation }) => {
 // define your styles
 const styles = StyleSheet.create({
     container: {
+        flex:1,
         margin: moderateScale(10)
     },
     view: {

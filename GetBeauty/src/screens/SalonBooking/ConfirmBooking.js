@@ -15,14 +15,14 @@ import { moderateScale } from 'react-native-size-matters';
 const ConfirmBooking = ({ navigation, route }) => {
     const item = route.params.item
     const passData = route.params
-   const time = route.params.time
+    console.log("this is passData", passData)
     const id = route.params.item.id
     const profile = route.params.profile
     
     console.log("this is data",passData)
 
     const [date, setDate] = useState(new Date());
-    // const [time, setTime] = useState(new Date());
+    const [time, setTime] = useState(new Date());
     const [value, setValue] = useState(null);
     const [modalvisible, setmodalvisible] = useState(false)
 
@@ -42,8 +42,8 @@ const ConfirmBooking = ({ navigation, route }) => {
                     service: item,
                     expertID: route.params.item.id,
                     date: date.toString().slice(4, 15),
-                    time: time.toString().slice(16, 21),
-                    method: value,
+                    time: passData.time,
+                    method: passData.value,
                     status: "Requested",
                 }
             )
@@ -86,7 +86,7 @@ const ConfirmBooking = ({ navigation, route }) => {
                     </View>
                     <View style={styles.view}>
                         <Text style={styles.text}>Time</Text>
-                        <Text style={styles.text}>{time}</Text>
+                        <Text style={styles.text}>{passData.time}</Text>
                     </View>
                     <SubHeading text={"Payment"} />
                     <View style={styles.view}>

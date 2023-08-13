@@ -1,5 +1,5 @@
 //import liraries
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState ,useCallback} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, ScrollView, ImageBackground, TextInput } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import SubHeading from '../../Components/SubHeading';
@@ -9,10 +9,45 @@ import BaseUrl from '../../baseUrl/BaseUrl';
 import Loader from '../../Components/Loader';
 import { getToken } from '../../../services/AsyncStorage';
 import { scale, verticalScale, moderateScale, moderateVerticalScale } from 'react-native-size-matters';
+import { RefreshControl } from 'react-native';
 // create a component
-const ParlorList = ({ navigation }) => {
+const ParlorList = ({ navigation,route }) => {
+   
+    
+    const [refreshing, setRefreshing] = useState(false);
     const [data, setdata] = useState()
     const [loading, setloading] = useState(true)
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        // getUserData()
+        getlist()
+        setRefreshing(false);
+    }, []);
+
+    const loadprofile = async (token) => {
+        const option = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(
+                {
+                    token: token
+                }
+            )
+        }
+        try {
+
+            await fetch(`${BaseUrl.SalonBaseurl}/loadprofile`, option)
+                .then((res) => res.json())
+                .then((d) => setdata(d))
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const getlist = async () => {
         try {
             await fetch(`${BaseUrl.ExpertBaseurl}/getlist`)
@@ -23,9 +58,29 @@ const ParlorList = ({ navigation }) => {
             console.log(error)
         }
     }
+
+    const getUserData = async () => {
+        try {
+            await fetch(`${BaseUrl.SalonBaseurl}/getlist`)
+                .then(res => res.json())
+                .then(d => { setdata(d.data), setloading(false) })
+                .catch(err => console.log(err))
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+   
     useEffect(() => {
+        (async () => {
+            const token = await getToken() // getting token from storage
+            setlocalToken(token);
+            loadprofile(token);
+        })();
         getlist()
-        console.log(data)
+        // getUserData()
+     
+        console.log('this is data',data)
     }, [])
 
     return (
@@ -49,7 +104,15 @@ const ParlorList = ({ navigation }) => {
                     </View>
                 </ImageBackground>
 
-                <ScrollView nestedScrollEnabled>
+                <ScrollView nestedScrollEnabled
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
+                            progressViewOffset={50}
+                            titleColor="#00ff00"
+                            colors={['purple', 'black', 'black']}
+                        />
+                    }
+                >
                     <SubHeading text={"Select Parlours"} viewStyle={{ marginLeft: moderateScale(20) }} textStyle={{ fontWeight: 'bold' }} />
                     <View style={{ margin: moderateScale(10) }}>
                         {loading && <Loader />}

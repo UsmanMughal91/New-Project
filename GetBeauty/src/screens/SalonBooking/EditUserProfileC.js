@@ -160,6 +160,13 @@ const EditUserProfileC = ({ navigation }) => {
                     {data && <View style={{ margin: moderateScale(10) }}>
 
                         <Heading text={"Edit Profile"} />
+                        <View style={{ alignItems: "center", marginTop: 30 }}>
+                            <TouchableOpacity onPress={pickImage}>
+                                <Image source={{ uri: pic }}
+                                    resizeMode="cover" style={styles.img} />
+                            </TouchableOpacity>
+                            <Text style={{ paddingTop: moderateScale(10), fontSize: Font.body }}>Add Pic</Text>
+                        </View>
 
                         <View style={{ marginTop: moderateScale(10) }}>
                             <InputText
@@ -203,13 +210,7 @@ const EditUserProfileC = ({ navigation }) => {
                                 inputStyle={{ paddingTop: moderateScale(-10) }}
                             />
                         </View>
-                        <View style={{ alignItems: "center", marginTop: 30 }}>
-                            <TouchableOpacity onPress={pickImage}>
-                                <Image source={{ uri: pic }}
-                                    resizeMode="cover" style={styles.img} />
-                            </TouchableOpacity>
-                            <Text style={{ paddingTop: moderateScale(10), fontSize: Font.body }}>Add Pic</Text>
-                        </View>
+                       
                         <BtnComp btnStyle={{ marginTop: moderateScale(20), marginBottom: moderateScale(20) }}
                             btnText={'Update Profile'}
                             onPress={handleform}

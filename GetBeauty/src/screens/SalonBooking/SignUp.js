@@ -1,6 +1,6 @@
 
 //import liraries
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import BtnComp from '../../Components/BtnComp';
@@ -16,6 +16,7 @@ import BaseUrl from '../../baseUrl/BaseUrl';
 import CustomModal from '../../Components/CustomModal';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { toastConfig } from '../../Styles/styles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // create a component
 const SignUp = ({ navigation }) => {
     const [name, setname] = useState("")
@@ -31,6 +32,28 @@ const SignUp = ({ navigation }) => {
     const [visible, setvisible] = useState(false)
     const [show1, setshow1] = useState(false)
     const [visible1, setvisible1] = useState(false)
+    const [fcmToken, setFcmToken] = useState()
+
+  
+
+  
+
+    // useEffect(async()=>{
+    //     console.log("USEEFFECT")
+    //     let fcmToken = await AsyncStorage.getItem('fcmToken')
+    //     console.log(fcmToken, "The old ")
+       
+    // },[])
+
+
+    useEffect(() => {
+        (async () => {
+            console.log("USEEFFECT")
+         let Token = await AsyncStorage.getItem('fcmToken')
+            console.log(Token, "The old ")
+         setFcmToken(Token)
+        })();
+    }, [])
     const pickImage = () => {
         launchImageLibrary({ quality: 0.5 }, (fileobj) => {
             const uploadTask = storage().ref().child(`/profile/${Math.floor((Math.random() * 1000000000) + 1)}`).putFile(fileobj.assets[0].uri)
@@ -75,7 +98,7 @@ const SignUp = ({ navigation }) => {
                         phone: `${phone}`,
                         address: `${address}`,
                         pic: `${pic}`,
-
+                        fcm_token: fcmToken
                     }
                 )
             }

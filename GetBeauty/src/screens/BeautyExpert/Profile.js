@@ -1,5 +1,5 @@
 //import liraries
-import React, { Component, useEffect, useState } from 'react';
+import React, { Component, useEffect, useState ,useCallback} from 'react';
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import Heading from '../../Components/Heading';
 import { getToken } from '../../../services/AsyncStorage';
@@ -9,10 +9,24 @@ import SubHeading from '../../Components/SubHeading';
 import Font from '../../Styles/Font';
 import BaseUrl from '../../baseUrl/BaseUrl';
 import { moderateScale } from 'react-native-size-matters';
+import { RefreshControl } from 'react-native';
 // create a component
 const Profile = ({ navigation }) => {
+    const [refreshing, setRefreshing] = useState(false);
     const [data, setdata] = useState();
     const [loading, setloading] = useState(true);
+
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        (async () => {
+            const token = await getToken() // getting token from storage
+            loadprofile(token);
+        })();
+        setRefreshing(false);
+    }, []);
+
+
     const loadprofile = async (token) => {
         const option = {
             method: 'POST',
@@ -50,7 +64,15 @@ const Profile = ({ navigation }) => {
             {loading? (<Loader/>):(<View style={{flex:1}}>
                 <Header text="no" onPress={() => navigation.goBack()} />
 
-                <ScrollView style={styles.container}>
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
+                            progressViewOffset={50}
+                            titleColor="#00ff00"
+                            colors={['purple', 'black', 'black']}
+                        />
+                    }
+                 style={styles.container}>
                   
                     {data && <View>
                         <Heading text={"My Profile"} />

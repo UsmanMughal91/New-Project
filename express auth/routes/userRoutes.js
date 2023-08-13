@@ -24,6 +24,7 @@ router.post('/loadprofile', userController.loadprofile)
 router.post('/updateprofile', userController.updateprofile)
 router.post('/payment', userController.payment)
 router.post('/loaduser', userController.loaduser)
+router.get('/getlist', userController.getlist)
 
 
 

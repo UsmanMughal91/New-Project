@@ -1,26 +1,35 @@
 //import liraries
 import React, { Component, useEffect } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image,ScrollView } from 'react-native';
 import Heading from '../../Components/Heading'
 import Header from '../../Components/Header';
 import { moderateScale } from 'react-native-size-matters';
 import SubHeading from '../../Components/SubHeading'
 import Font from '../../Styles/Font';
-
+import Feather from 'react-native-vector-icons/Feather'
+import BtnComp from '../../Components/BtnComp';
 // create a component
 const ServiceDetail = ({ navigation, route }) => {
+
+    const item = route.params.item
     useEffect(() => {
         console.log(route.params.item)
     }, [])
     return (
-        <View>
-        
+        <ScrollView style={{flex:1}}>
+
             <Header onPress={() => navigation.goBack()} />
 
             <View style={{ margin: moderateScale(10) }}>
-                <Heading text={"About Service"} />
+
+                <Heading text={"About Service"} textStyle={{ textAlign: "center" }} />
+
                 <Image source={{ uri: route.params.item.pic }}
                     style={styles.img} />
+                <SubHeading text={"Service Name"} />
+                <Text style={styles.text}>
+                    {route.params.item.serviceName}
+                </Text>
                 <SubHeading text={"Discription"} />
                 <Text style={styles.text}>
                     {route.params.item.serviceDetails}
@@ -29,8 +38,11 @@ const ServiceDetail = ({ navigation, route }) => {
                 <Text style={styles.text}>
                     {route.params.item.servicePrice} PKR
                 </Text>
+
+                <BtnComp btnText={'EDIT'} btnStyle={{marginTop:moderateScale(40)}}
+                    onPress={() => navigation.navigate("EditService", { item })}/>
             </View>
-        </View>
+        </ScrollView>
     );
 };
 

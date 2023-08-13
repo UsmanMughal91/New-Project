@@ -1,5 +1,5 @@
 //import liraries
-import React, { Component, useEffect, useState } from 'react';
+import React, { Component, useEffect, useState,useCallback } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ScrollView } from 'react-native';
 import Heading from '../../Components/Heading';
 import { getToken } from '../../../services/AsyncStorage';
@@ -9,11 +9,32 @@ import Font from '../../Styles/Font';
 import BaseUrl from '../../baseUrl/BaseUrl';
 import Loader from '../../Components/Loader'
 import { scale, verticalScale, moderateScale, moderateVerticalScale } from 'react-native-size-matters';
+import { RefreshControl } from 'react-native';
+import Refresh from '../../Components/Refresh';
+
 // create a component
 const Appointment = ({ navigation }) => {
 
     const [data, setdata] = useState('')
     const [loading, setloading] = useState(true)
+    const [refreshing, setRefreshing] = useState(false);
+
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        
+                // const token = await getToken()
+        (async () => {
+            const token = await getToken()
+            console.log("this is token", token)
+            loadRequests(token);
+        })();
+            
+        // Perform your refresh logic here
+        // Once the refresh is complete, set refreshing to false
+        setRefreshing(false);
+    }, []);
+
 
     const loadRequests = async (token) => {
         const option = {
@@ -33,17 +54,21 @@ const Appointment = ({ navigation }) => {
             await fetch(`${BaseUrl.SalonBaseurl}/loadRequests`, option)
                 .then((res) => res.json())
                 .then((d) => {
+                   
                     setdata(d.data)
                     setloading(false)
                 })
                 .catch(err => console.log(err))
         } catch (error) {
+           
+
             console.log(error)
         }
     }
     useEffect(() => {
         (async () => {
             const token = await getToken()
+            console.log("this is token",token)
             loadRequests(token);
         })();
     }, [])
@@ -53,7 +78,17 @@ const Appointment = ({ navigation }) => {
         <View style={{ flex: 1 }}>
             {loading ? (<Loader/>):(<View style={{flex:1}}>
                 <Header text={"no"} onPress={() => navigation.goBack()} />
-                <ScrollView>
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh}     
+                            progressViewOffset={50}
+                            titleColor="#00ff00"
+                            colors={['purple', 'black', 'black']}
+                         />
+                    }
+           
+                >
+               
                     <View style={{ margin: moderateScale(10) }}>
                         <Heading text={"Appointment History"} />
                         <View style={styles.barView}>
@@ -65,6 +100,9 @@ const Appointment = ({ navigation }) => {
                         {data ? (<View><FlatList
                             data={data}
                             keyExtractor={data => data._id}
+                            // refreshControl={
+                            //     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                            // }
                             renderItem={({ item }) => (
                                 <View style={styles.flatView}>
                                     <View style={{ flexDirection: "row" }}>

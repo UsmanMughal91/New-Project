@@ -6,13 +6,14 @@ import jwt from 'jsonwebtoken'
 import transporter from '../config/emailConfig.js'
 import ExpertModel from '../models/Expert.js'
 import Stripe from "stripe"
-
-const stripe = Stripe('sk_test_51MMrrHAhoA10sFoFiGEIJWI3cU6jMpPMSGWyn8cY6xNecwKmGH48OVtq5c7eo3kp7nt8qPXCuNlHKcHZKC7zY1Cw00wmK077Hp')
 import FCM from "fcm-node";
-
+const serverKey = 'AAAASkp9QyE:APA91bGyROYtC6ki4jnefh5xN9I_7pNOxfQYYEbyr9KTqLSaiaQWlMUU71Q-LxA8i6dmABq39q_dOTjkLctGauFo-0_ZVwiCn2eXKom578213Sq5E5QFpdILdoHcqFHycXNl6MbUtpTQ'; //LIVE ALI Key
+const fcm = new FCM(serverKey);
+const myt = 'fvs9c_V-QzSQT7m--AEmOb:APA91bHQLDJVa5DMgJGh3nWC4izdrFEASF56r1vkMGxUUVRt-i6HOkiAWu-W23AOovnHDRhzUHKHy8I0jZFk1P-BwK6RNTqeL-8v1JiIAhJrNE_S8V93WuKOFDb4ho3TPXmZILAZfO0n'
 class userController {
     static userRegistration = async (req, res) => {
-        const { name, email, password, password_confirmation,phone,address,pic } = req.body
+        const { name, email, password, password_confirmation, phone, address, pic, fcm_token } = req.body
+        console.log('this is body',req.body)
         const user = await UserModel.findOne({ email: email })
         if (user) {
             res.send({ "status": "failed", "message": "Email already exists" })
@@ -28,10 +29,10 @@ class userController {
                             password: hashPassword,
                             phone: phone,
                             address: address,
-                            pic: pic
-
-                        
+                            pic: pic,
+                            fcm_token: fcm_token
                         })
+                        console.log(doc);
                         await doc.save()
                         const saved_user = await UserModel.findOne({ email: email })
                         // Generate JWT Token
@@ -51,7 +52,7 @@ class userController {
     }
 
     static userLogin = async (req, res) => {
-        try {
+        //  {
             const { email, password } = req.body
             console.log(req.body)
             if (email && password) {
@@ -72,10 +73,10 @@ class userController {
             } else {
                 res.send({ "status": "failed", "message": "All Fields are Required" })
             }
-        } catch (error) {
-            console.log(error)
-            res.send({ "status": "failed", "message": "Unable to Login" })
-        }
+        // } catch (error) {
+        //     console.log(error)
+        //     res.send({ "status": "failed", "message": "Unable to Login" })
+        // }
     }
 
     static changeUserPassword = async (req, res) => {
@@ -89,9 +90,10 @@ class userController {
                 const newHashPassword = await bcrypt.hash(password, salt)
                 await UserModel.findByIdAndUpdate(data.userID, { $set: { password: newHashPassword } })
                 res.send({ "status": "success", "message": "Password has been changed" })
-                
-            }}
+
+            }
         }
+    }
     static loggedUser = async (req, res) => {
         res.send({ "user": req.user })
     }
@@ -150,10 +152,10 @@ class userController {
         }
     }
     static loadservices = async (req, res) => {
-        const id = req.body.id    
+        const id = req.body.id
         console.log(id)
         try {
-            const user = ServiceModel.find({id:id}, function (err, docs) {
+            const user = ServiceModel.find({ id: id }, function (err, docs) {
                 if (err) {
                     console.log(err);
                 }
@@ -166,70 +168,53 @@ class userController {
             res.send({ "status": "failed", "message": "failed to get list" })
         }
     }
+    
 
-    static booking = async (req,res) =>{
+    static booking = async (req, res) => {
         const data = req.body
-        const token = req.body.token
+        console.log(req.body)
+        const token =  req.body.token
         var docs = JSON.parse(atob(token.split('.')[1]));
         const user = await UserModel.findById(docs.userID)
         const expert = await ExpertModel.findById(data.expertID)
-        console.log(req.body,user)
+        console.log(req.body, user)
         try {
             const doc = new BookingModel({
-                userid:user._id,
+                userid: user._id,
                 expert: expert,
                 user: user,
                 service: data.service,
                 expertID: data.expertID,
                 date: data.date,
-                time:data.time,
-                method:data.method,
-                status:data.status,
+                time: data.time,
+                method: data.method,
+                status: data.status,
             })
             await doc.save()
-            const serverKey = 'AAAASkp9QyE:APA91bGyROYtC6ki4jnefh5xN9I_7pNOxfQYYEbyr9KTqLSaiaQWlMUU71Q-LxA8i6dmABq39q_dOTjkLctGauFo-0_ZVwiCn2eXKom578213Sq5E5QFpdILdoHcqFHycXNl6MbUtpTQ';
-            const fcm = new FCM(serverKey);
-            // var UsereModel = require('../models/user.model');
-            // NOTIFICATION FUNCTION 
-            const pushNotification = async (notificationTitle, notificationMsg, deviceToken, count = 0) => {
-                //   let action_user = await UsereModel.findOne({_id: action_id});
-                var message = {
-                    to: deviceToken,
-                    collapse_key: 'AAAANUMQE8c:APA91bFBZXcoBtA5GMrpj3zxkP-UEtqY50RBW2Fa8XOAJJjeUOS4g1LWj2JuK5qiwy7Nkd81wstEl934KoUoZiLEOrGFv_dvtmvrOa-Um2Dd9OrNuJunFaoyuVoGkEd3g9efx8ytdCjt',
-                    notification: {
-                        title: notificationTitle,
-                        body: notificationMsg
-                    },
-                    data: {
-                        count: count,
-                    }
-                };
-                fcm.send(message, function (err, response) {
-                    if (err) {
-                        console.log(err);
-                        console.log("Something has gone wrong!");
-                    } else {
-                        console.log("Successfully sent with response: ", response);
-                    }
-                });
-            };
+            await this.sendNotification("Appointment", "Sajid send a request", myt)
+            transporter.sendMail({
+                from: 'usmughal333@mail.com',
+                to: expert.email,
+                subject: `New order`,
+                html: `
+              <p>You have reciened a new order form ${user.name}</p>
+              `,
+            })
+
             res.send({ "status": "success", message: "data saved successfully" })
         } catch (error) {
-            res.send({ "status": "failed", message: "failed to save data" })     
+            res.send({ "status": "failed", message: "failed to save data" })
         }
-      
-        
-
     }
 
     static loadRequests = async (req, res) => {
-        console.log('this is body',req.body)
+        console.log('this is body', req.body)
         const token = req.body.token
         var decrypt = JSON.parse(atob(token.split('.')[1]));
-        const user = await UserModel.findById({_id:decrypt.userID })
+        const user = await UserModel.findById({ _id: decrypt.userID })
         console.log(user)
         try {
-             BookingModel.find({userid:user._id}, function (err, docs) {
+            BookingModel.find({ userid: user._id }, function (err, docs) {
                 if (err) {
                     console.log(err);
                 }
@@ -244,7 +229,7 @@ class userController {
     }
     static loadprofile = async (req, res) => {
         console.log('loadprofile')
-        const token = req.body.token
+        const token =  req.body.token
         var data = JSON.parse(atob(token.split('.')[1]));
         try {
             const docs = await UserModel.findById(data.userID)
@@ -263,10 +248,10 @@ class userController {
     static updateprofile = async (req, res) => {
         const data = req.body
         const token = req.body.token
-      
-            var d = JSON.parse(atob(token.split('.')[1]));
-     
-       
+
+        var d = JSON.parse(atob(token.split('.')[1]));
+
+
         try {
             const user = UserModel.findByIdAndUpdate(d.userID,
                 {
@@ -275,7 +260,7 @@ class userController {
                     address: data.address,
                     phone: data.phone,
                     pic: data.pic,
-                    about: data.about, 
+                    about: data.about,
                 }, function (err, docs) {
                     if (err) {
                         console.log(err)
@@ -292,40 +277,41 @@ class userController {
     }
 
 
- static payment = async (req, res) => {
-    // Use an existing Customer ID if this is a returning customer.
-    const {amount,currency} = req.body
+    static payment = async (req, res) => {
+        // Use an existing Customer ID if this is a returning customer.
+        const { amount, currency } = req.body
 
-    const customer = await stripe.customers.create();
-    const ephemeralKey = await stripe.ephemeralKeys.create(
-        { customer: customer.id },
-        { apiVersion: '2022-11-15' }
-    );
-    const paymentIntent = await stripe.paymentIntents.create({
-        amount: amount,
-        currency: currency,
-        customer: customer.id,
-        payment_method_types: ['card']
-            
-        
-    });
+        const customer = await stripe.customers.create();
+        const ephemeralKey = await stripe.ephemeralKeys.create(
+            { customer: customer.id },
+            { apiVersion: '2022-11-15' }
+        );
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: amount,
+            currency: currency,
+            customer: customer.id,
+            payment_method_types: ['card']
 
-    res.json({
-        paymentIntent: paymentIntent.client_secret,
-        ephemeralKey: ephemeralKey.secret,
-        customer: customer.id,
-      
-    });
-};
+
+        });
+
+        res.json({
+            paymentIntent: paymentIntent.client_secret,
+            ephemeralKey: ephemeralKey.secret,
+            customer: customer.id,
+
+        });
+    };
     static loaduser = async (req, res) => {
         console.log('loaduser')
+        console.log(req.body)
         const token = req.body.token
-        console.log(token)
-        
-        if(token){
+
+
+        if (token) {
             var data = JSON.parse(atob(token.split('.')[1]));
         }
-       
+
         if (token) {
             try {
                 const user = await UserModel.findById(data.userID)
@@ -348,6 +334,78 @@ class userController {
             res.send({ "status": "failed", "message": "failed to get user" })
         }
     }
+    static getlist = async (req, res) => {
+        console.log('req made')
+
+        try {
+            UserModel.find({}, function (err, result) {
+                if (err) {
+                    res
+                        .status(200)
+                        .json({ 'status': 'success', "message": err.message });
+                } else {
+                    res
+                        .status(200)
+                        .json({ 'status': 'success', "data": result });
+                }
+            });
+        } catch (error) {
+            console.log(error)
+            res.send({ "status": "failed", "message": "failed to get list" })
+        }
+    }
+    static getUserData = async (req, res) => {
+        console.log('req made')
+
+        try {
+            UserModel.find({}, function (err, result) {
+                if (err) {
+                    res
+                        .status(200)
+                        .json({ 'status': 'success', "message": err.message });
+                } else {
+                    res
+                        .status(200)
+                        .json({ 'status': 'success', "data": result });
+                }
+            });
+        } catch (error) {
+            console.log(error)
+            res.send({ "status": "failed", "message": "failed to get list" })
+        }
+    }
+
+
+
+    // var UsereModel = require('../models/user.model');
+    // NOTIFICATION FUNCTION 
+    static sendNotification = async (notificationTitle, notificationMsg, m, count = 0) => {
+        //   let action_user = await UsereModel.findOne({_id: action_id});
+        var message = {
+            to: "fvs9c_V-QzSQT7m--AEmOb:APA91bHQLDJVa5DMgJGh3nWC4izdrFEASF56r1vkMGxUUVRt-i6HOkiAWu-W23AOovnHDRhzUHKHy8I0jZFk1P-BwK6RNTqeL-8v1JiIAhJrNE_S8V93WuKOFDb4ho3TPXmZILAZfO0n",
+            collapse_key: 'get_buty',
+            notification: {
+                title: notificationTitle,
+                body: notificationMsg
+            },
+            data: {
+                count: count,
+            }
+        };
+        console.log("sendNotification-message", message)
+        fcm.send(message, function (err, response) {
+            if (err) {
+                console.log(err);
+                console.log("Something has gone wrong!");
+            } else {
+                console.log("Successfully sent with response: ", response);
+            }
+        });
+    };
 }
+
+
+
+
 
 export default userController

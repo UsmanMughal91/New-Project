@@ -1,5 +1,5 @@
 //import liraries
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, FlatList, TextInput } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -11,8 +11,10 @@ import Colors from '../../Styles/Colors';
 import BaseUrl from '../../baseUrl/BaseUrl';
 import { moderateScale } from 'react-native-size-matters';
 import Font from '../../Styles/Font';
+import { RefreshControl } from 'react-native';
 // create a component
 const ProviderServices = ({ navigation }) => {
+    const [refreshing, setRefreshing] = useState(false);
     const [data, setdata] = useState();
     const [serviceName, setserviceName] = useState();
     const [servicePrice, setservicePrice] = useState();
@@ -20,6 +22,17 @@ const ProviderServices = ({ navigation }) => {
     const [id, setid] = useState();
     const [search, setSearch] = useState("")
     const [loading, setloading] = useState(true)
+
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        (async () => {
+            const token = await getToken() // getting token from storage
+            loadservices(token);
+        })();
+        setRefreshing(false);
+    }, []);
+
 
     const loadservices = async (token) => {
         const option = {
@@ -57,7 +70,15 @@ const ProviderServices = ({ navigation }) => {
         <View style={{ flex: 1 }}>
 {loading ? (<Loader/>):(<View style={{flex:1}}>
                 <Header onPress={() => navigation.goBack()} />
-                <ScrollView>
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
+                            progressViewOffset={50}
+                            titleColor="#00ff00"
+                            colors={['purple', 'black', 'black']}
+                        />
+                    }
+                >
 
                     {data &&
                         <View style={{ margin: moderateScale(10) }}>

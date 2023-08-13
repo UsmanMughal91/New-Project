@@ -8,6 +8,7 @@ const ExpertSchema = new mongoose.Schema({
     phone: { type: String, trim: true },
     pic: { type: String, required: true },
     address: { type: String, trim: true },
+    earning: { type: Number, trim: true },
     about: { type: String, trim: true },
     daysX: { type: String, trim: true },
     daysY: { type: String, trim: true },

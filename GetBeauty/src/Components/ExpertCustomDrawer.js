@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useCallback } from 'react';
 import {
     DrawerContentScrollView,
     DrawerItemList,
@@ -14,9 +14,20 @@ import { getToken } from '../../services/AsyncStorage';
 import BaseUrl from '../baseUrl/BaseUrl';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { moderateScale } from 'react-native-size-matters';
+import { RefreshControl } from 'react-native';
 const ExpertCustomDrawer = (props) => {
-
+    const [refreshing, setRefreshing] = useState(false);
     const [data, setdata] = useState();
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        (async () => {
+            const token = await getToken() // getting token from storage
+            loadprofile(token);
+        })();
+        setRefreshing(false);
+    }, []);
+
     const loadprofile = async (token) => {
         const option = {
             method: 'POST',
@@ -49,7 +60,15 @@ const ExpertCustomDrawer = (props) => {
     return (
 <View style={{flex:1,justifyContent:'space-between'}}> 
 
-        <DrawerContentScrollView  {...props} >
+        <DrawerContentScrollView
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
+                        progressViewOffset={50}
+                        titleColor="#00ff00"
+                        colors={['purple', 'black', 'black']}
+                    />
+                }
+        {...props} >
            
                 <View style={styles.view1} >
                     {data && <>
@@ -94,14 +113,7 @@ const ExpertCustomDrawer = (props) => {
                         labelStyle={styles.lable}
                         icon={() => <MaterialCommunityIcons name='lock-outline' size={25} />}
                     />
-                    <DrawerItem
-                        pressColor={Colors.purple}
-                        inactiveBackgroundColor='#dfd4f1'
-                        label="Add Location"
-                        onPress={() => navigation.navigate("Location")}
-                        labelStyle={styles.lable}
-                        icon={() => <Ionicons name='location-outline' size={25} />}
-                    />
+                   
                     <DrawerItem
                         pressColor={Colors.purple}
                         inactiveBackgroundColor='#dfd4f1'

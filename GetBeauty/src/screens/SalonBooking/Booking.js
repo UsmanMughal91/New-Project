@@ -73,7 +73,8 @@ const Booking = ({ navigation, route }) => {
             value: date,
             onChange,
             mode: currentMode,
-            is24Hour: true,
+            is24Hour: false,
+           
         })
     };
 
@@ -82,12 +83,13 @@ const Booking = ({ navigation, route }) => {
             value: time,
             onChange: onChange2,
             mode: currentMode,
-            is24Hour: true,
+            is24Hour: false,
         })
     };
 
     const showDatepicker = () => {
         showMode('date');
+    
     };
 
     const showTimepicker = () => {

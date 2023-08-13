@@ -1,5 +1,5 @@
 //import liraries
-import React, { Component, useEffect, useState } from 'react';
+import React, { Component, useEffect, useState,useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, ImageBackground, TextInput, Dimensions } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { getToken } from '../../../services/AsyncStorage';
@@ -9,14 +9,27 @@ import { BarChart } from "react-native-chart-kit";
 import BaseUrl from '../../baseUrl/BaseUrl';
 import Font from '../../Styles/Font';
 import { moderateScale, scale, moderateVerticalScale } from 'react-native-size-matters';
-
+import { RefreshControl } from 'react-native';
 const DashBoard = ({ navigation }) => {
+    const [refreshing, setRefreshing] = useState(false);
     const [data, setdata] = useState()
     const [TotalServices, setTotalServices] = useState(0)
     const [PendingOrders, setPendingOrders] = useState()
     const [CompletedOrders, setCompletedOrders] = useState()
     const [loading, setloading] = useState(true)
 
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        (async () => {
+            const token = await getToken() // getting token from storage
+            setCompletedOrders(0)
+            setPendingOrders(0)
+            loadservices(token);
+            loadRequests(token);
+        })();
+        setRefreshing(false);
+    }, []);
     // create a component
     const loadservices = async (token) => {
         const option = {
@@ -103,48 +116,21 @@ const DashBoard = ({ navigation }) => {
                         </View>
                     </ImageBackground>
 
-                    {data && <ScrollView style={{ flex: 1, margin: moderateScale(10) }}>
+                    {data && <ScrollView 
+                        refreshControl={
+                            <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
+                                progressViewOffset={50}
+                                titleColor="#00ff00"
+                                colors={['purple', 'black', 'black']}
+                            />
+                        }
+                    style={{ flex: 1, margin: moderateScale(10) }}>
 
-                        <View style={styles.view1}>
-                            <View style={styles.view2}>
-                                <Text style={styles.erng}>Monthly EARNING</Text>
-                                <TouchableOpacity onPress={() => navigation.navigate("EarningHistory")}>
-                                    <Text style={{ fontSize: Font.body, fontWeight: 'bold', color: Colors.purple }}>History</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.chartView}>
-                                <BarChart
-                                    data={{
-                                        labels: ['Aug', "Sep", 'Oct', "Nov", "Dec", "Jan"],
-                                        datasets: [{
-                                            data: [700, 500, 1000, 800, 950, 800]
-                                        }]
-                                    }}
-                                    width={Dimensions.get("window").width - 50}
-                                    height={moderateScale(200)}
-                                    yAxisLabel="Rs"
-                                    chartConfig={{
-                                        backgroundGradientFrom: "white",
-                                        backgroundGradientFromOpacity: 1,
-                                        backgroundGradientTo: "white",
-                                        backgroundGradientToOpacity: 1,
-                                        decimalPlaces: 1,
-                                        color: opacity => "black",
-                                        barPercentage: 0.5,
-                                        fillShadowGradient: Colors.purple,
-                                        fillShadowGradientOpacity: 1,
-                                    }}
-                                    withInnerLines={false}
-                                />
-                            </View>
-                        </View>
-
-                        <View style={styles.view3}>
                             <View style={styles.view4}>
                                 <Text style={styles.text}>Total  Services</Text>
                                 <Text style={styles.number}>{TotalServices}</Text>
                             </View>
-                            <View style={{ ...styles.view4, marginHorizontal: moderateScale(10) }}>
+                            <View style={styles.view4}>
                                 <Text style={styles.text}>Pending  Orders</Text>
                                 <Text style={styles.number}>{PendingOrders}</Text>
                             </View>
@@ -152,13 +138,13 @@ const DashBoard = ({ navigation }) => {
                                 <Text style={styles.text}>Completed Orders</Text>
                                 <Text style={styles.number}>{CompletedOrders}</Text>
                             </View>
+
+                        <View style={styles.view4}>
+                            <Text style={styles.text}>TOTAL EARNING</Text>
+                            <Text style={styles.number}>{data.earning}</Text>
                         </View>
-                        <View style={styles.view5}>
-                            <Text style={{ fontSize: Font.body, margin: moderateScale(10), fontWeight: 'bold', color: 'gray' }}>TOTAL EARNING</Text>
-                            <View style={{ alignSelf: "center" }}>
-                                <Text style={{ fontSize: Font.Heading, color: Colors.purple }}>20345 PKR</Text>
-                            </View>
-                        </View>
+                       
+                      
                     </ScrollView >}
     </View>
 )}
@@ -227,13 +213,17 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.white,
         flex: 1,
         borderRadius: moderateScale(12),
-        elevation:10
+        elevation:10,
+        marginHorizontal:moderateScale(20),
+        marginBottom:moderateScale(20),
+        marginTop:moderateScale(20)
     },
     text: {
         textAlign: 'center',
         margin: moderateScale(10),
         color: 'gray',
-        fontSize: Font.text
+        fontSize: Font.body,
+        fontWeight:"bold"
     },
     number: {
         fontSize: Font.Heading,

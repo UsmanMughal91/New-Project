@@ -1,6 +1,6 @@
 
 //import liraries
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState ,useCallback} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, FlatList, TextInput } from 'react-native';
 import Heading from '../../Components/Heading';
 import { getToken } from '../../../services/AsyncStorage';
@@ -11,14 +11,22 @@ import Loader from '../../Components/Loader';
 import { moderateScale } from 'react-native-size-matters';
 import Font from '../../Styles/Font';
 import Ionicons from "react-native-vector-icons/Ionicons"
+import { RefreshControl } from 'react-native';
 // create a component
 const Services = ({ navigation, route }) => {
+    const [refreshing, setRefreshing] = useState(false);
     const id = route.params.id
     const profile = route.params.profile
 
     const [data, setdata] = useState();
     const [search, setSearch] = useState("");
     const [loading, setloading] = useState("true");
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        loadservices(id)
+        setRefreshing(false);
+    }, []);
 
     const loadservices = async (id) => {
         const option = {
@@ -53,7 +61,15 @@ const Services = ({ navigation, route }) => {
         <View style={{ flex: 1 }}>
             {loading ? (<Loader/>):(<View style={{flex:1}}>
                 <Header onPress={() => navigation.goBack()} />
-                <ScrollView>
+                <ScrollView refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
+                        progressViewOffset={50}
+                        titleColor="#00ff00"
+                        colors={['purple', 'black', 'black']}
+                    />
+                }
+
+                >
                     <Heading text={"Services"} />
                     <View style={styles.container}>
                         <View style={styles.sView}>

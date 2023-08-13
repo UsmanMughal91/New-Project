@@ -10,6 +10,7 @@ const Splash = ({navigation}) => {
     const [user,setUser] = useState()
     
         const loaduser = async (token)=> {
+
         const option = {
             method: 'POST',
             headers: {

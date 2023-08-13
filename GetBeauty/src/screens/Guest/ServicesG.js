@@ -65,25 +65,7 @@ const ServicesG = ({ navigation, route }) => {
                         <Text style={styles.text}>{profile.email}</Text>
 
                     </View>}
-                <View style={styles.mapcontainer}>
-              
-                    <MapView
-                        provider={PROVIDER_GOOGLE}
-                        style={styles.map}
-                        initialRegion={{
-                            latitude: 37.78825,
-                            longitude: -122.4324,
-                            latitudeDelta: 0.015,
-                            longitudeDelta: 0.0121,
-                        }}
-                        showUserLocation={true} >
-                        <Marker coordinate={{
-                            latitude: 37.78825,
-                            longitude: -122.4324,
-                        }} />
-                    </MapView>
-
-                </View>
+               
             </ScrollView>
         </View>
     );

@@ -27,7 +27,8 @@ class ExpertController {
                             phone: phone,
                             parlourName: parlourName,
                             address: address,
-                            pic: pic
+                            pic: pic,
+                            earning:0
 
                         })
                         await doc.save()
@@ -294,24 +295,55 @@ class ExpertController {
         }
     }
 
-    static booking = async (req,res) =>{
+    static booking = async (req, res) => {
         const data = req.body.item
         const newStatus = req.body.newStatus
         try {
-            BookingModel.findOneAndUpdate({_id: data._id }, 
-                {status: newStatus}, function (err, docs) {
-                if (err){
-                    console.log(err)
-                }
-                else{
-                    res.send({ "status": "success", message: "data updated successfully" })
-                }
-            });
+            if (newStatus === "Completed") {
+                BookingModel.findOneAndUpdate({ _id: data._id },
+                    { status: newStatus, $inc: { earning: +data.service.servicePrice } },
+                    function (err, docs) {
+                        if (err) {
+                            console.log(err)
+                        }
+                        else {
+                            transporter.sendMail({
+                                from: 'noreply@mail.com',
+                                to: data.user.email,
+                                subject: `Order ${newStatus}`,
+                                html: `
+                      <p>You order for ${data.service.serviceName} is ${newStatus}</p>
+                      `,
+                            })
+                            res.send({ "status": "success", message: "data updated successfully" })
+                        }
+                    });
+            } else {
+                BookingModel.findOneAndUpdate({ _id: data._id },
+                    { status: newStatus }, function (err, docs) {
+                        if (err) {
+                            console.log(err)
+                        }
+                        else {
+                            transporter.sendMail({
+                                from: 'noreply@mail.com',
+                                to: data.user.email,
+                                subject: `Order ${newStatus}`,
+                                html: `
+                      <p>You order for ${data.service.serviceName} is ${newStatus}</p>
+                      `,
+                            })
+                            res.send({ "status": "success", message: "data updated successfully" })
+                        }
+                    });
+            }
         } catch (error) {
             res.send({ "status": "failed", message: "failed to save data" })
-            
+
         }
     }
 }
+
+
 
 export default ExpertController

@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
     pic: { type: String ,required:true },
     address: { type:String, trim: true },
     about: { type: String, trim: true },
+    fcm_token: { type: String },
 })
 
 //define model

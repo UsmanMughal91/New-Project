@@ -1,5 +1,5 @@
 //import liraries
-import React, { Component, useEffect, useState } from 'react';
+import React, { Component, useEffect, useState,useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ImageBackground, ScrollView } from 'react-native';
 import Heading from '../../Components/Heading';
 import { getToken } from '../../../services/AsyncStorage';
@@ -9,10 +9,23 @@ import Font from '../../Styles/Font';
 import SubHeading from '../../Components/SubHeading'
 import BaseUrl from '../../baseUrl/BaseUrl';
 import { scale, verticalScale, moderateScale, moderateVerticalScale } from 'react-native-size-matters';
+import { RefreshControl } from 'react-native';
 // create a component
 const UserProfile = ({ navigation }) => {
+    const [refreshing, setRefreshing] = useState(false);
     const [data, setdata] = useState();
     const [loading, setloading] = useState(true);
+
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        (async () => {
+            const token = await getToken() // getting token from storage
+            loadprofile(token);
+        })();
+        setRefreshing(false);
+    }, []);
+
     const loadprofile = async (token) => {
         const option = {
             method: 'POST',
@@ -47,7 +60,16 @@ const UserProfile = ({ navigation }) => {
             {loading ? (<Loader/>):(<View style={{flex:1}}>
                 <Header text={"no"} onPress={() => navigation.goBack()} />
                 <View style={styles.container}>
-                    <ScrollView>
+                    <ScrollView 
+                        refreshControl={
+                            <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
+                                progressViewOffset={50}
+                                titleColor="#00ff00"
+                                colors={['purple', 'black', 'black']}
+                            />
+                        }
+                    
+                    >
                         {loading && <Loader viewStyle={{ marginTop: 320 }} />}
                         {data && <View>
                             <Heading text={"My Profile"} />

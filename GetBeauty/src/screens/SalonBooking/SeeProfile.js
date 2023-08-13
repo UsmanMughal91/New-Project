@@ -1,14 +1,23 @@
 
 //import liraries
-import React from 'react';
+import React,{useCallback,useState} from 'react';
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import BtnComp from '../../Components/BtnComp';
 import Header from '../../Components/Header';
 import SubHeading from '../../Components/SubHeading';
 import { scale, verticalScale, moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import Font from '../../Styles/Font';
+import { RefreshControl } from 'react-native';
 // create a component
 const SeeProfile = ({ navigation, route }) => {
+
+    const onRefresh = useCallback(async () => {
+    
+        setRefreshing(false);
+    }, []);
+
+
+    const [refreshing, setRefreshing] = useState(false);
     const profile = route.params.item
   
     const id = profile._id
@@ -16,7 +25,16 @@ const SeeProfile = ({ navigation, route }) => {
     return (
         <View style={{ flex: 1 }}>
             <Header onPress={() => navigation.goBack()} />
-            <ScrollView>
+            <ScrollView 
+
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
+                        progressViewOffset={50}
+                        titleColor="#00ff00"
+                        colors={['purple', 'black', 'black']}
+                    />
+                }
+            >
                 {profile &&
                     <View style={styles.container}>
                         <View style={{ alignItems: 'center', marginTop: moderateScale(10) }}>

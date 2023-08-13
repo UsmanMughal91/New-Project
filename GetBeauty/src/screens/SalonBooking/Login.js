@@ -15,8 +15,8 @@ import BaseUrl from '../../baseUrl/BaseUrl';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 // create a component
 const Login = ({ navigation }) => {
-    const [email, setemail] = useState("Sajid@gmail.com")
-    const [password, setpassword] = useState("123456")
+    const [email, setemail] = useState("")
+    const [password, setpassword] = useState("")
     const [data, setdata] = useState("")
     const [show, setshow] = useState(false)
     const [visible, setvisible] = useState(false)

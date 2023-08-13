@@ -40,9 +40,10 @@ const EditProfile = ({ navigation }) => {
     const [timeZ, setTimeZ] = useState("")
     const [modalvisible, setmodalvisible] = useState(false)
     
+
     const pickImage = () => {
         launchImageLibrary({ quality: 0.5 }, (fileobj) => {
-            const uploadTask = storage().ref().child(`/expertprofile/${Date.now()}`).putFile(fileobj.assets[0].uri)
+            const uploadTask = storage().ref().child(`/expertprofile/${Math.floor((Math.random() * 1000000000) + 1)}`).putFile(fileobj.assets[0].uri)
             uploadTask.on('state_changed',
                 (snapshot) => {
 
@@ -52,7 +53,7 @@ const EditProfile = ({ navigation }) => {
                             type: 'Done',
                             position: 'top',
                             topOffset: 0,
-                            text1: "Image uploaded successfully"
+                            text1: "Image upload Successfully"
                         })
                     }
 
@@ -61,12 +62,11 @@ const EditProfile = ({ navigation }) => {
                     alert("error uploading image")
                 },
                 () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
                         setpic(downloadURL)
                     });
                 }
             );
-
         })
     }
    
@@ -176,6 +176,13 @@ const EditProfile = ({ navigation }) => {
                         <Heading text={"Edit Profile"} />
 
                         <View style={{ marginTop: moderateScale(10) }}>
+                            <View style={{ alignItems: "center", marginTop: moderateScale(20) }}>
+                                <TouchableOpacity onPress={pickImage}>
+                                    <Image source={{ uri: pic }}
+                                        resizeMode="cover" style={styles.img} />
+                                </TouchableOpacity>
+                                <Text style={{ paddingTop: moderateScale(10), fontWeight: 'bold', fontSize: Font.body }}>Add Pic</Text>
+                            </View>
                             <InputText
                                 lable={"Name"}
                                 Icon={<Ionicons name="person" size={25} />}
@@ -283,13 +290,7 @@ const EditProfile = ({ navigation }) => {
 
                         </View>
 
-                        <View style={{ alignItems: "center", marginTop: moderateScale(20) }}>
-                            <TouchableOpacity onPress={pickImage}>
-                                <Image source={{ uri: pic }}
-                                    resizeMode="cover" style={styles.img} />
-                            </TouchableOpacity>
-                            <Text style={{ paddingTop: moderateScale(10), fontWeight: 'bold', fontSize: Font.body }}>Add Pic</Text>
-                        </View>
+                       
                         <BtnComp btnStyle={{ marginTop: moderateScale(30) }}
                             btnText={'Update Profile'}
                             onPress={handleform}

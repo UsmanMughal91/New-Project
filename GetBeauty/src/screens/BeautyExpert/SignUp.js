@@ -70,6 +70,7 @@ const SignUp = ({ navigation }) => {
                 body: JSON.stringify(
                     {
                         name: `${name}`,
+                        parlourName:`${parlourName}`,
                         email: `${email}`,
                         password: `${password}`,
                         password_confirmation: `${password_confirmation}`,
@@ -80,7 +81,7 @@ const SignUp = ({ navigation }) => {
                     }
                 )
             }
-            await fetch(`${BaseUrl.SalonBaseurl}/register`, option)
+            await fetch(`${BaseUrl.ExpertBaseurl}/register`, option)
                 .then(res => res.json())
                 .then(d => {
                     setdata(d)
